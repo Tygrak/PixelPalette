@@ -8,23 +8,43 @@
     <DockPanel>
         <Border DockPanel.Dock="Top" Height="50" BorderBrush="Black" BorderThickness="2" Background="Gray">
             <DockPanel>
-                <Button Name="OpenFile" DockPanel.Dock="Left" Click="OnOpenFileButton">
+                <Button Name="OpenFile" DockPanel.Dock="Left" Click="OnOpenFileButtonClick">
                     Open File
                 </Button>
-                <Button Name="LoadPalette" DockPanel.Dock="Left">
-                    Load Palette
+                <Button Name="SaveFile" DockPanel.Dock="Left" Click="OnSaveFileButtonClick">
+                    Save File
                 </Button>
+                <TextBlock Margin="10" Name="ImageSize" DockPanel.Dock="Right" TextAlignment="Center" VerticalAlignment="Center">
+                    
+                </TextBlock>
+                <TextBlock Margin="10" Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
+                    
+                </TextBlock>
+                <!--
+                <Button Name="OpenPalette" DockPanel.Dock="Left">
+                    Open Palette
+                </Button>
+                -->
                 <DockPanel>
                 </DockPanel>
             </DockPanel>
         </Border>
-        <Border DockPanel.Dock="Left" Width="50" BorderBrush="Black" BorderThickness="2" Background="White">
+        <Border DockPanel.Dock="Left" Width="100" BorderBrush="Black" BorderThickness="2" Background="White">
             <DockPanel>
-                <Button Name="Dither" DockPanel.Dock="Top" Height="50">
+                <Button Name="RestoreImage" DockPanel.Dock="Top" Height="50" Click="OnRestoreButtonClick">
+                    Restore
+                </Button>
+                <Button Name="SortPicture" DockPanel.Dock="Top" Height="50" Click="OnSortButtonClick">
+                    Sort
+                </Button>
+                <Button Name="Threshold" DockPanel.Dock="Top" Height="50" Click="OnThresholdButtonClick">
+                    Threshold
+                </Button>
+                <Button Name="Dither" DockPanel.Dock="Top" Height="50" Click="OnDitherButtonClick">
                     Dither
                 </Button>
-                <Button Name="PaletteSwap" DockPanel.Dock="Top" Height="50">
-                    Palette Swap
+                <Button Name="Palette" DockPanel.Dock="Top" Height="50" Click="OnPaletteButtonClick">
+                    Palette
                 </Button>
                 <DockPanel>
                 </DockPanel>

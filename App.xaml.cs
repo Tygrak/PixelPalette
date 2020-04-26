@@ -1,6 +1,10 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Drawing;
 
 namespace PixelPalette
 {
@@ -16,8 +20,8 @@ namespace PixelPalette
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             {
                 desktop.MainWindow = new MainWindow();
+                desktop.ShutdownMode = ShutdownMode.OnMainWindowClose;
             }
-
             base.OnFrameworkInitializationCompleted();
         }
    }

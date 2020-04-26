@@ -1,0 +1,45 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="PixelPalette.PaletteWindow"
+        Title="Palette"
+        Width="600"
+        Height="800">
+  <DockPanel>
+        <Border DockPanel.Dock="Top" Height="50" BorderBrush="Black" BorderThickness="2" Background="Gray">
+            <DockPanel>
+                <Button Name="MedianCut" DockPanel.Dock="Left" Click="OnMedianCutButtonClick">
+                    Median Cut
+                </Button>
+                <TextBlock Margin="10" Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
+                    
+                </TextBlock>
+                <!--
+                <Button Name="OpenPalette" DockPanel.Dock="Left">
+                    Open Palette
+                </Button>
+                -->
+                <DockPanel>
+                </DockPanel>
+            </DockPanel>
+        </Border>
+        <Button Name="OkButton" DockPanel.Dock="Bottom" Width="100" Click="OnOkButtonClick">
+            Ok
+        </Button>
+        <DockPanel>
+          <ListBox Name="ColorsListBox">
+              <ListBox.ItemTemplate>
+                  <DataTemplate>
+                    <DockPanel LastChildFill="false">
+                      <TextBlock DockPanel.Dock="Left" Text="{Binding Hex}" VerticalAlignment="Center"/>
+                      <Border DockPanel.Dock="Right" BorderBrush="Black" BorderThickness="2" Background="{Binding Brush}" CornerRadius="4" Padding="4" Width="50" Height="20" Margin="8">
+                      </Border>
+                    </DockPanel>
+                  </DataTemplate>
+              </ListBox.ItemTemplate>
+          </ListBox>
+        </DockPanel>
+    </DockPanel>
+</Window>
