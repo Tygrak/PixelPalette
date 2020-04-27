@@ -47,5 +47,14 @@ namespace PixelPalette {
             }
             return colors;
         }
+
+        public static (int R, int G, int B)[] IntArrayFromBitmap(Bitmap bitmap) {
+            byte[] bytes = Array1DFromBitmap(bitmap);
+            (int R, int G, int B)[] colors = new (int R, int G, int B)[bytes.Length/3];
+            for (int i = 0; i < bytes.Length/3; i++) {
+                colors[i] = (bytes[i*3+2], bytes[i*3+1], bytes[i*3]);
+            }
+            return colors;
+        }
     }
 }

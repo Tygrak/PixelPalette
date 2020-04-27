@@ -34,14 +34,14 @@
                 <Button Name="RestoreImage" DockPanel.Dock="Top" Height="50" Click="OnRestoreButtonClick">
                     Restore
                 </Button>
-                <Button Name="SortPicture" DockPanel.Dock="Top" Height="50" Click="OnSortButtonClick">
-                    Sort
-                </Button>
                 <Button Name="Threshold" DockPanel.Dock="Top" Height="50" Click="OnThresholdButtonClick">
                     Threshold
                 </Button>
                 <Button Name="Dither" DockPanel.Dock="Top" Height="50" Click="OnDitherButtonClick">
                     Dither
+                </Button>
+                <Button Name="FloStein" DockPanel.Dock="Top" Height="50" Click="OnFloSteinButtonClick">
+                    FloydSteinberg
                 </Button>
                 <Button Name="Palette" DockPanel.Dock="Top" Height="50" Click="OnPaletteButtonClick">
                     Palette

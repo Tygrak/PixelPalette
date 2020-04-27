@@ -10,6 +10,14 @@ namespace PixelPalette {
             return MathF.Sqrt(MathF.Pow(a.R-b.R, 2)+MathF.Pow(a.G-b.G, 2)+MathF.Pow(a.B-b.B, 2));
         }
 
+        public static float GetDistance((int R, int G, int B) a, Color b) {
+            return MathF.Sqrt(MathF.Pow(a.R-b.R, 2)+MathF.Pow(a.G-b.G, 2)+MathF.Pow(a.B-b.B, 2));
+        }
+
+        public static float GetDistance(Color a, (int R, int G, int B) b) {
+            return GetDistance(b, a);
+        }
+
         public static Color AverageColors(Color a, Color b) {
             return Color.FromArgb(((int) a.R+b.R)/2, ((int) a.G+b.G)/2, ((int) a.B+b.B)/2);
         }
@@ -85,44 +93,45 @@ namespace PixelPalette {
             }
             List<Color> resultColors = new List<Color>();
             foreach (var pixels in colors) {
-                resultColors.Add(AverageColors(pixels.GetRange(pixels.Count/2, pixels.Count/2)));
+                resultColors.Add(AverageColors(pixels));
             }
             return resultColors;
             //return colors.Select(l => AverageColors(l)).ToList();
         }
 
-        /*
-        def getImagePaletteMedianCut(image, amount):
-            def splitSortColors (toSplit):
-                minColors = [255, 255, 255]
-                maxColors = [0, 0, 0]
-                for pixel in toSplit:
-                    for i in range(3):
-                        if (pixel[i] > maxColors[i]):
-                            maxColors[i] = pixel[i]
-                        if (pixel[i] < minColors[i]):
-                            minColors[i] = pixel[i]
-                maxRange = 0
-                sortKey = 0
-                for i in range(3):
-                    crange = maxColors[i]-minColors[i]
-                    if (crange > maxRange):
-                        maxRange = crange
-                        sortKey = i
-                toSplit = sorted(toSplit, key=lambda x: x[sortKey])
-                return [toSplit[len(toSplit)//2:], toSplit[:len(toSplit)//2]]
-            
-            parts = []
-            pixels = list(image.getdata())
-            parts.append(pixels)
-            for i in range(int(math.log2(amount))):
-                for j in range(len(parts)-1, -1, -1):
-                    splitted = splitSortColors(parts[j])
-                    parts.pop(j)
-                    parts.append(splitted[0])
-                    parts.append(splitted[1])
-            colors = [averagePixelColors(x) for x in parts]
-            return colors
-        */
+        public static Bitmap SortColors(Bitmap bitmap, int count) {
+            DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
+            List<List<Color>> colors = new List<List<Color>>(){BitmapConvert.ColorArrayFromBitmap(bitmap).ToList()};
+            while (colors.Count*2 <= count) {
+                List<List<Color>> nextColors = new List<List<Color>>(); 
+                foreach (var pixels in colors) {
+                    var splitted = ColorHelpers.SplitColors(pixels);
+                    nextColors.Add(splitted.Item1);
+                    nextColors.Add(splitted.Item2);
+                }
+                colors = nextColors;
+            }
+            while (colors.Count < count) {
+                var splitted = ColorHelpers.SplitColors(colors[colors.Count-1]);
+                colors.RemoveAt(colors.Count-1);
+                colors.Add(splitted.Item1);
+                colors.Add(splitted.Item2);
+            }
+            var resColors = new List<Color>();
+            foreach (var pixels in colors)
+            {
+                resColors.AddRange(pixels);
+            }
+            for (int x = 0; x < bitmap.Width; x++) {
+                for (int y = 0; y < bitmap.Height; y++) {
+                    if (y > 0 && y%(bitmap.Height/count) == 0) {
+                        result.SetPixel(x, y, Color.Black);
+                    } else {
+                        result.SetPixel(x, y, resColors[x+y*bitmap.Width]);
+                    }
+                }    
+            }
+            return result.Bitmap;
+        }
     }
 }

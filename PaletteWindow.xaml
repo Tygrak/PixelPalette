@@ -8,38 +8,46 @@
         Width="600"
         Height="800">
   <DockPanel>
-        <Border DockPanel.Dock="Top" Height="50" BorderBrush="Black" BorderThickness="2" Background="Gray">
-            <DockPanel>
-                <Button Name="MedianCut" DockPanel.Dock="Left" Click="OnMedianCutButtonClick">
-                    Median Cut
-                </Button>
-                <TextBlock Margin="10" Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
-                    
-                </TextBlock>
-                <!--
-                <Button Name="OpenPalette" DockPanel.Dock="Left">
-                    Open Palette
-                </Button>
-                -->
-                <DockPanel>
-                </DockPanel>
-            </DockPanel>
-        </Border>
-        <Button Name="OkButton" DockPanel.Dock="Bottom" Width="100" Click="OnOkButtonClick">
-            Ok
-        </Button>
-        <DockPanel>
-          <ListBox Name="ColorsListBox">
-              <ListBox.ItemTemplate>
-                  <DataTemplate>
-                    <DockPanel LastChildFill="false">
-                      <TextBlock DockPanel.Dock="Left" Text="{Binding Hex}" VerticalAlignment="Center"/>
-                      <Border DockPanel.Dock="Right" BorderBrush="Black" BorderThickness="2" Background="{Binding Brush}" CornerRadius="4" Padding="4" Width="50" Height="20" Margin="8">
-                      </Border>
-                    </DockPanel>
-                  </DataTemplate>
-              </ListBox.ItemTemplate>
-          </ListBox>
+        <DockPanel DockPanel.Dock="Bottom">
+            <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">
+                Ok
+            </Button>
+            <TextBlock Margin="10" Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
+                
+            </TextBlock>
         </DockPanel>
+        
+        
+        <TabControl>
+            <TabItem Header="Palette Colors" VerticalContentAlignment="Center">
+                <ListBox Name="ColorsListBox">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <DockPanel LastChildFill="false">
+                                <TextBlock DockPanel.Dock="Left" Text="{Binding Hex}" VerticalAlignment="Center"/>
+                                <Border DockPanel.Dock="Right" BorderBrush="Black" BorderThickness="2" Background="{Binding Brush}" CornerRadius="4" Padding="4" Width="50" Height="20" Margin="8">
+                                </Border>
+                            </DockPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+            <TabItem Header="Median Cut" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Result color amount:" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="MedianCutColorAmount" Width="200" Value="8" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="SortPicture" DockPanel.Dock="Left" Click="OnSortButtonClick">
+                            Preview Median Cut
+                        </Button>
+                        <Button Name="MedianCut" DockPanel.Dock="Right" Click="OnMedianCutButtonClick">
+                            Median Cut
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </Window>

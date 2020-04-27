@@ -15,6 +15,8 @@ namespace PixelPalette {
         private TextBlock statusText;
         private ListBox colorsListBox;
 
+        private NumericUpDown medianCutAmountNumeric;
+
         public bool Showing = false;
         
         public List<Color> ColorPalette {get; set;}
@@ -30,6 +32,7 @@ namespace PixelPalette {
             colorsListBox = this.FindControl<ListBox>("ColorsListBox");
             ReloadPaletteItems();
             statusText = this.FindControl<TextBlock>("Status");
+            medianCutAmountNumeric = this.FindControl<NumericUpDown>("MedianCutColorAmount");
             Closing += (s, e) => {
                 Hide();
                 Showing = false;
@@ -40,9 +43,20 @@ namespace PixelPalette {
         private async void GeneratePalette() {
             if (mainWindow.CurrentBitmap != null) {
                 statusText.Text = "Generating Palette";
-                ColorPalette = await Task.Run(() => ColorHelpers.MedianCut(mainWindow.CurrentBitmap, 8));
+                int amount = (int) medianCutAmountNumeric.Value;
+                ColorPalette = await Task.Run(() => ColorHelpers.MedianCut(mainWindow.CurrentBitmap, amount));
                 ReloadPaletteItems();
                 //ReloadMainImage();
+                statusText.Text = "";
+            }
+        }
+
+        private async void SortImage() {
+            if (mainWindow.CurrentBitmap != null) {
+                statusText.Text = "Sorting image";
+                int amount = (int) medianCutAmountNumeric.Value;
+                mainWindow.CurrentBitmap = await Task.Run(() => ColorHelpers.SortColors(mainWindow.CurrentBitmap, amount)); 
+                mainWindow.ReloadMainImage();
                 statusText.Text = "";
             }
         }
@@ -58,6 +72,10 @@ namespace PixelPalette {
         private void OnOkButtonClick(object sender, RoutedEventArgs eventArgs) {
             Showing = false;
             Hide();
+        }
+
+        private void OnSortButtonClick(object sender, RoutedEventArgs eventArgs) {
+            SortImage();
         }
     }
 }

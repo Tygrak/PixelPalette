@@ -14,8 +14,6 @@ using System.Linq;
 
 namespace PixelPalette {
     public class MainWindow : Window {
-        private Ditherer ditherer = new Ditherer();
-
         private AvaloniaImage mainImage;
         private TextBlock imageSizeText;
         private TextBlock statusText;
@@ -93,19 +91,10 @@ namespace PixelPalette {
             }
         }
 
-        private async void SortImage() {
-            if (CurrentBitmap != null) {
-                statusText.Text = "Sorting image";
-                CurrentBitmap = await Task.Run(() => ditherer.SortColors(CurrentBitmap, paletteWindow.ColorPalette.ToArray())); 
-                ReloadMainImage();
-                statusText.Text = "";
-            }
-        }
-
         private async void ThresholdImage() {
             if (CurrentBitmap != null) {
                 statusText.Text = "Thresholding image";
-                CurrentBitmap = await Task.Run(() => ditherer.ClosestColor(CurrentBitmap, paletteWindow.ColorPalette.ToArray())); 
+                CurrentBitmap = await Task.Run(() => Ditherer.ClosestColor(CurrentBitmap, paletteWindow.ColorPalette.ToArray())); 
                 ReloadMainImage();
                 statusText.Text = "";
             }
@@ -114,13 +103,23 @@ namespace PixelPalette {
         private async void DitherImage() {
             if (CurrentBitmap != null) {
                 statusText.Text = "Dithering image";
-                CurrentBitmap = await Task.Run(() => ditherer.RandomDither(CurrentBitmap, paletteWindow.ColorPalette.ToArray())); 
+                CurrentBitmap = await Task.Run(() => Ditherer.RandomDither(CurrentBitmap, paletteWindow.ColorPalette.ToArray())); 
                 ReloadMainImage();
                 statusText.Text = "";
             }
         }
 
-        private void ReloadMainImage() {
+        private async void FloSteinImage() {
+            if (CurrentBitmap != null) {
+                statusText.Text = "Dithering image";
+                CurrentBitmap = await Task.Run(() => Ditherer.FloydSteinberg(CurrentBitmap, paletteWindow.ColorPalette.ToArray())); 
+                ReloadMainImage();
+                statusText.Text = "";
+            }
+        }
+
+
+        public void ReloadMainImage() {
             mainImage.Source = BitmapConvert.ConvertToAvaloniaBitmap(CurrentBitmap);
             imageSizeText.Text = $"{InitialBitmap.Size.Width}x{InitialBitmap.Size.Height}";
         }
@@ -137,16 +136,16 @@ namespace PixelPalette {
             RestoreImage();
         }
 
-        private void OnSortButtonClick(object sender, RoutedEventArgs eventArgs) {
-            SortImage();
-        }
-
         private void OnThresholdButtonClick(object sender, RoutedEventArgs eventArgs) {
             ThresholdImage();
         }
 
         private void OnDitherButtonClick(object sender, RoutedEventArgs eventArgs) {
             DitherImage();
+        }
+
+        private void OnFloSteinButtonClick(object sender, RoutedEventArgs eventArgs) {
+            FloSteinImage();
         }
 
         private void OnPaletteButtonClick(object sender, RoutedEventArgs eventArgs) {
