@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PixelPalette {
+namespace PixelPalette.Algorithm {
     public static class ColorHelpers {
         public static float GetDistance(Color a, Color b) {
             return MathF.Sqrt(MathF.Pow(a.R-b.R, 2)+MathF.Pow(a.G-b.G, 2)+MathF.Pow(a.B-b.B, 2));

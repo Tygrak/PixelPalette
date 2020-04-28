@@ -4,7 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace PixelPalette {
+namespace PixelPalette.Algorithm {
     public static class Ditherer {
         public static Bitmap ClosestColor(Bitmap bitmap, Color[] colorPalette) {
             Color[] colors = BitmapConvert.ColorArrayFromBitmap(bitmap);

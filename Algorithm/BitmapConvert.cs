@@ -8,7 +8,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 
-namespace PixelPalette {
+namespace PixelPalette.Algorithm {
     public static class BitmapConvert {
         public static AvaloniaBitmap ConvertToAvaloniaBitmap(Bitmap bitmap) {
             using (MemoryStream memoryStream = new MemoryStream()) {

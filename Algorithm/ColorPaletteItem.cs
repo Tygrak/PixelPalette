@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 
-namespace PixelPalette {
+namespace PixelPalette.Algorithm {
     public class ColorPaletteItem {
         public Color color;
         public string Hex {
