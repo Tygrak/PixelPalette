@@ -1,0 +1,112 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="PixelPalette.DitherWindow"
+        Title="Dither"
+        Width="600"
+        Height="400">
+  <DockPanel>
+        <DockPanel DockPanel.Dock="Bottom">
+            <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">
+                Close
+            </Button>
+            <TextBlock Margin="10" Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
+                
+            </TextBlock>
+        </DockPanel>
+        <TabControl>
+            <TabItem Header="Threshold" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="ThresholdButton" DockPanel.Dock="Right" Click="OnThresholdButtonClick">
+                            Threshold
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Random" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Random bias:" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="RandomBias" Width="100" Value="10" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="RandomButton" DockPanel.Dock="Right" Click="OnRandomButtonClick">
+                            Dither
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Ordered" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Threshold Matrix Size:" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="ThresholdMatrixSize" Width="100" Value="4" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="OrderedButton" DockPanel.Dock="Right" Click="OnOrderedButtonClick">
+                            Dither
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="2 Row" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Error Diffusion Matrix:" VerticalAlignment="Center"/>
+                        <Grid DockPanel.Dock="Right" Width="300" ColumnDefinitions="1*,1*,1*" RowDefinitions="Auto,Auto,Auto" Margin="5">
+                            <TextBlock Grid.Row="0" Grid.Column="0" Text="" TextAlignment="Center" VerticalAlignment="Center" />
+                            <TextBlock Grid.Row="0" Grid.Column="1" Text="*" TextAlignment="Center" VerticalAlignment="Center" />
+                            <NumericUpDown Grid.Row="0" Grid.Column="2" Name="OneRowError20" Value="7" />
+                            <NumericUpDown Grid.Row="1" Grid.Column="0" Name="OneRowError01" Value="3" />
+                            <NumericUpDown Grid.Row="1" Grid.Column="1" Name="OneRowError11" Value="5" />
+                            <NumericUpDown Grid.Row="1" Grid.Column="2" Name="OneRowError21" Value="1" />
+                            <DockPanel LastChildFill="false" Grid.Row="2" Grid.Column="1">
+                                <TextBlock DockPanel.Dock="Left" Text="*1/" VerticalAlignment="Center"/>
+                                <NumericUpDown Name="OneRowErrorMultiplier" Value="16" />
+                            </DockPanel>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="FloSteinButton" DockPanel.Dock="Right" Click="OnFloSteinButtonClick">
+                            Dither
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="3 Row" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Error Diffusion Matrix:" VerticalAlignment="Center"/>
+                        <Grid DockPanel.Dock="Right" Width="400" ColumnDefinitions="1*,1*,1*,1*,1*" RowDefinitions="Auto,Auto,Auto,Auto" Margin="5">
+                            <TextBlock Grid.Row="0" Grid.Column="2" Text="*" TextAlignment="Center" VerticalAlignment="Center" />
+                            <NumericUpDown Grid.Row="0" Grid.Column="3" Name="TwoRowError30" Value="7" />
+                            <NumericUpDown Grid.Row="0" Grid.Column="4" Name="TwoRowError40" Value="5" />
+                            <NumericUpDown Grid.Row="1" Grid.Column="0" Name="TwoRowError01" Value="3" />
+                            <NumericUpDown Grid.Row="1" Grid.Column="1" Name="TwoRowError11" Value="5" />
+                            <NumericUpDown Grid.Row="1" Grid.Column="2" Name="TwoRowError21" Value="7" />
+                            <NumericUpDown Grid.Row="1" Grid.Column="3" Name="TwoRowError31" Value="5" />
+                            <NumericUpDown Grid.Row="1" Grid.Column="4" Name="TwoRowError41" Value="3" />
+                            <NumericUpDown Grid.Row="2" Grid.Column="0" Name="TwoRowError02" Value="1" />
+                            <NumericUpDown Grid.Row="2" Grid.Column="1" Name="TwoRowError12" Value="3" />
+                            <NumericUpDown Grid.Row="2" Grid.Column="2" Name="TwoRowError22" Value="5" />
+                            <NumericUpDown Grid.Row="2" Grid.Column="3" Name="TwoRowError32" Value="3" />
+                            <NumericUpDown Grid.Row="2" Grid.Column="4" Name="TwoRowError42" Value="1" />
+                            <DockPanel LastChildFill="false" Grid.Row="3" Grid.Column="2">
+                                <TextBlock DockPanel.Dock="Left" Text="*1/" VerticalAlignment="Center"/>
+                                <NumericUpDown Name="TwoRowErrorMultiplier" Value="48" />
+                            </DockPanel>
+                        </Grid>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="MinAvgErrButton" DockPanel.Dock="Right" Click="OnMinAvgErrButtonClick">
+                            Dither
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

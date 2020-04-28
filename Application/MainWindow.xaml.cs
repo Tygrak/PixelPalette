@@ -20,9 +20,12 @@ namespace PixelPalette {
         private TextBlock statusText;
 
         private PaletteWindow paletteWindow;
+        private DitherWindow ditherWindow;
 
         public Bitmap InitialBitmap {get; set;} = null;
         public Bitmap CurrentBitmap {get; set;} = null;
+
+        public List<Color> ColorPalette {get {return paletteWindow.ColorPalette;}}
 
         public App app;
 
@@ -30,6 +33,8 @@ namespace PixelPalette {
             InitializeComponent();
             paletteWindow = new PaletteWindow();
             paletteWindow.mainWindow = this;
+            ditherWindow = new DitherWindow();
+            ditherWindow.mainWindow = this;
         }
 
         private void InitializeComponent() {
@@ -37,9 +42,6 @@ namespace PixelPalette {
             mainImage = this.FindControl<AvaloniaImage>("MainImage");
             imageSizeText = this.FindControl<TextBlock>("ImageSize");
             statusText = this.FindControl<TextBlock>("Status");
-            Closing += (s, e) => {
-                //System.Environment.Exit(0);
-            };
         }
 
         private async Task<string> GetOpenImagePath() {
@@ -53,15 +55,6 @@ namespace PixelPalette {
             return result[0];
         }
 
-        private async void LoadImage() {
-            string path = await GetOpenImagePath();
-            if (path != null && path != "") {
-                InitialBitmap = new Bitmap(path);
-                CurrentBitmap = InitialBitmap;
-                ReloadMainImage();
-            }
-        }
-
         private async Task<string> GetSaveImagePath() {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExtension = "png";
@@ -73,7 +66,21 @@ namespace PixelPalette {
             return result;
         }
 
-        private async void SaveImage() {
+        public void ReloadMainImage() {
+            mainImage.Source = BitmapConvert.ConvertToAvaloniaBitmap(CurrentBitmap);
+            imageSizeText.Text = $"{InitialBitmap.Size.Width}x{InitialBitmap.Size.Height}";
+        }
+
+        private async void OnOpenFileButtonClick(object sender, RoutedEventArgs eventArgs) {
+            string path = await GetOpenImagePath();
+            if (path != null && path != "") {
+                InitialBitmap = new Bitmap(path);
+                CurrentBitmap = InitialBitmap;
+                ReloadMainImage();
+            }
+        }
+
+        private async void OnSaveFileButtonClick(object sender, RoutedEventArgs eventArgs) {
             if (CurrentBitmap == null) {
                 return;
             }
@@ -83,7 +90,7 @@ namespace PixelPalette {
             }
         }
 
-        private void RestoreImage() {
+        private void OnRestoreButtonClick(object sender, RoutedEventArgs eventArgs) {
             if (CurrentBitmap != null) {
                 statusText.Text = "Restoring image";
                 CurrentBitmap = InitialBitmap; 
@@ -92,61 +99,12 @@ namespace PixelPalette {
             }
         }
 
-        private async void ThresholdImage() {
-            if (CurrentBitmap != null) {
-                statusText.Text = "Thresholding image";
-                CurrentBitmap = await Task.Run(() => Ditherer.ClosestColor(CurrentBitmap, paletteWindow.ColorPalette.ToArray())); 
-                ReloadMainImage();
-                statusText.Text = "";
-            }
-        }
-
-        private async void DitherImage() {
-            if (CurrentBitmap != null) {
-                statusText.Text = "Dithering image";
-                CurrentBitmap = await Task.Run(() => Ditherer.RandomDither(CurrentBitmap, paletteWindow.ColorPalette.ToArray())); 
-                ReloadMainImage();
-                statusText.Text = "";
-            }
-        }
-
-        private async void FloSteinImage() {
-            if (CurrentBitmap != null) {
-                statusText.Text = "Dithering image";
-                CurrentBitmap = await Task.Run(() => Ditherer.FloydSteinberg(CurrentBitmap, paletteWindow.ColorPalette.ToArray())); 
-                ReloadMainImage();
-                statusText.Text = "";
-            }
-        }
-
-
-        public void ReloadMainImage() {
-            mainImage.Source = BitmapConvert.ConvertToAvaloniaBitmap(CurrentBitmap);
-            imageSizeText.Text = $"{InitialBitmap.Size.Width}x{InitialBitmap.Size.Height}";
-        }
-
-        private void OnOpenFileButtonClick(object sender, RoutedEventArgs eventArgs) {
-            LoadImage();
-        }
-
-        private void OnSaveFileButtonClick(object sender, RoutedEventArgs eventArgs) {
-            SaveImage();
-        }
-
-        private void OnRestoreButtonClick(object sender, RoutedEventArgs eventArgs) {
-            RestoreImage();
-        }
-
-        private void OnThresholdButtonClick(object sender, RoutedEventArgs eventArgs) {
-            ThresholdImage();
-        }
-
         private void OnDitherButtonClick(object sender, RoutedEventArgs eventArgs) {
-            DitherImage();
-        }
-
-        private void OnFloSteinButtonClick(object sender, RoutedEventArgs eventArgs) {
-            FloSteinImage();
+            if (ditherWindow.Showing) {
+                return;
+            }
+            ditherWindow.Showing = true;
+            ditherWindow.ShowDialog(this);
         }
 
         private void OnPaletteButtonClick(object sender, RoutedEventArgs eventArgs) {

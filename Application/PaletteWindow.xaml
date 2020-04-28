@@ -6,11 +6,11 @@
         x:Class="PixelPalette.PaletteWindow"
         Title="Palette"
         Width="600"
-        Height="800">
+        Height="600">
   <DockPanel>
         <DockPanel DockPanel.Dock="Bottom">
             <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">
-                Ok
+                Close
             </Button>
             <TextBlock Margin="10" Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
                 

@@ -18,6 +18,32 @@ namespace PixelPalette.Algorithm {
             return GetDistance(b, a);
         }
 
+        public static Color GetMinDistance(Color color, Color[] colorPalette) {
+            int minDistance = int.MaxValue;
+            int minDistanceId = -1;
+            for (int i = 0; i < colorPalette.Length; i++) {
+                int distance = (int) ColorHelpers.GetDistance(colorPalette[i], color);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    minDistanceId = i;
+                }
+            }
+            return colorPalette[minDistanceId];
+        }
+
+        public static Color GetMinDistance((int R, int G, int B) color, Color[] colorPalette) {
+            int minDistance = int.MaxValue;
+            int minDistanceId = -1;
+            for (int i = 0; i < colorPalette.Length; i++) {
+                int distance = (int) ColorHelpers.GetDistance(colorPalette[i], color);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    minDistanceId = i;
+                }
+            }
+            return colorPalette[minDistanceId];
+        }
+
         public static Color AverageColors(Color a, Color b) {
             return Color.FromArgb(((int) a.R+b.R)/2, ((int) a.G+b.G)/2, ((int) a.B+b.B)/2);
         }

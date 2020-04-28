@@ -12,16 +12,7 @@ namespace PixelPalette.Algorithm {
             for (int x = 0; x < bitmap.Width; x++) {
                 for (int y = 0; y < bitmap.Height; y++) {
                     Color pixel = colors[x+y*bitmap.Width];
-                    int minDistance = int.MaxValue;
-                    int minDistanceIndex = -1;
-                    for (int i = 0; i < colorPalette.Length; i++) {
-                        int distance = (int) ColorHelpers.GetDistance(colorPalette[i], pixel);
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            minDistanceIndex = i;
-                        }
-                    }
-                    result.SetPixel(x, y, colorPalette[minDistanceIndex]);
+                    result.SetPixel(x, y, ColorHelpers.GetMinDistance(pixel, colorPalette));
                 }    
             }
             return result.Bitmap;
@@ -35,27 +26,69 @@ namespace PixelPalette.Algorithm {
             colors[pos] = ((int) (colors[pos].R+toAdd.R*multiplier), (int) (colors[pos].G+toAdd.G*multiplier), (int) (colors[pos].B+toAdd.B*multiplier));
         }
 
-        public static Bitmap FloydSteinberg(Bitmap bitmap, Color[] colorPalette) {
+        public static Bitmap FloydSteinbergDither(Bitmap bitmap, Color[] colorPalette, float[] errorMatrix) {
+            if (errorMatrix == null || errorMatrix.Length < 4) {
+                throw new ArgumentException("Error diffusion matrix needs to have 4 values");
+            }
             (int R, int G, int B)[] colors = BitmapConvert.IntArrayFromBitmap(bitmap);
             DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
             for (int x = 0; x < bitmap.Width; x++) {
                 for (int y = 0; y < bitmap.Height; y++) {
                     (int R, int G, int B) pixel = colors[x+y*bitmap.Width];
-                    int minDistance = int.MaxValue;
-                    int minDistanceId = -1;
-                    for (int i = 0; i < colorPalette.Length; i++) {
-                        int distance = (int) ColorHelpers.GetDistance(colorPalette[i], pixel);
-                        if (distance < minDistance) {
-                            minDistance = distance;
-                            minDistanceId = i;
-                        }
-                    }
-                    (int R, int G, int B) error = (pixel.R-colorPalette[minDistanceId].R, pixel.G-colorPalette[minDistanceId].G, pixel.B-colorPalette[minDistanceId].B);
-                    AddToPixelInArray(colors, x+1, y  , bitmap.Width, error, 7/16f);
-                    AddToPixelInArray(colors, x-1, y+1, bitmap.Width, error, 3/16f);
-                    AddToPixelInArray(colors, x  , y+1, bitmap.Width, error, 5/16f);
-                    AddToPixelInArray(colors, x+1, y+1, bitmap.Width, error, 1/16f);
-                    result.SetPixel(x, y, colorPalette[minDistanceId]);
+                    Color nearestColor = ColorHelpers.GetMinDistance(pixel, colorPalette);
+                    (int R, int G, int B) error = (pixel.R-nearestColor.R, pixel.G-nearestColor.G, pixel.B-nearestColor.B);
+                    AddToPixelInArray(colors, x+1, y  , bitmap.Width, error, errorMatrix[0]);
+                    AddToPixelInArray(colors, x-1, y+1, bitmap.Width, error, errorMatrix[1]);
+                    AddToPixelInArray(colors, x  , y+1, bitmap.Width, error, errorMatrix[2]);
+                    AddToPixelInArray(colors, x+1, y+1, bitmap.Width, error, errorMatrix[3]);
+                    result.SetPixel(x, y, nearestColor);
+                }    
+            }
+            return result.Bitmap;
+        }
+
+        public static Bitmap MinAvgErrDither(Bitmap bitmap, Color[] colorPalette, float[] errorMatrix) {
+            if (errorMatrix == null || errorMatrix.Length < 12) {
+                throw new ArgumentException("Error diffusion matrix needs to have 12 values");
+            }
+            (int R, int G, int B)[] colors = BitmapConvert.IntArrayFromBitmap(bitmap);
+            DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
+            for (int x = 0; x < bitmap.Width; x++) {
+                for (int y = 0; y < bitmap.Height; y++) {
+                    (int R, int G, int B) pixel = colors[x+y*bitmap.Width];
+                    Color nearestColor = ColorHelpers.GetMinDistance(pixel, colorPalette);
+                    (int R, int G, int B) error = (pixel.R-nearestColor.R, pixel.G-nearestColor.G, pixel.B-nearestColor.B);
+                    AddToPixelInArray(colors, x+1, y  , bitmap.Width, error, errorMatrix[0]);
+                    AddToPixelInArray(colors, x+2, y  , bitmap.Width, error, errorMatrix[1]);
+                    AddToPixelInArray(colors, x-2, y+1, bitmap.Width, error, errorMatrix[2]);
+                    AddToPixelInArray(colors, x-1, y+1, bitmap.Width, error, errorMatrix[3]);
+                    AddToPixelInArray(colors, x  , y+1, bitmap.Width, error, errorMatrix[4]);
+                    AddToPixelInArray(colors, x+1, y+1, bitmap.Width, error, errorMatrix[5]);
+                    AddToPixelInArray(colors, x+2, y+1, bitmap.Width, error, errorMatrix[6]);
+                    AddToPixelInArray(colors, x-2, y+2, bitmap.Width, error, errorMatrix[7]);
+                    AddToPixelInArray(colors, x-1, y+2, bitmap.Width, error, errorMatrix[8]);
+                    AddToPixelInArray(colors, x  , y+2, bitmap.Width, error, errorMatrix[9]);
+                    AddToPixelInArray(colors, x+1, y+2, bitmap.Width, error, errorMatrix[10]);
+                    AddToPixelInArray(colors, x+2, y+2, bitmap.Width, error, errorMatrix[11]);
+                    result.SetPixel(x, y, nearestColor);
+                }    
+            }
+            return result.Bitmap;
+        }
+
+        //todo: configurable size
+        public static Bitmap OrderedDither(Bitmap bitmap, Color[] colorPalette) {
+            float[,] matrix = new float[,] {{0, 8/16f, 2/16f, 10/16f}, {12/16f, 4/16f, 14/16f, 6/16f}, 
+                                            {3/16f, 11/16f, 1/16f, 9/16f}, {15/16f, 7/16f, 13/16f, 5/16f}};
+            (int R, int G, int B)[] colors = BitmapConvert.IntArrayFromBitmap(bitmap);
+            DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
+            for (int x = 0; x < bitmap.Width; x++) {
+                for (int y = 0; y < bitmap.Height; y++) {
+                    (int R, int G, int B) pixel = colors[x+y*bitmap.Width];
+                    pixel.R = (int) (pixel.R+255/4f*(matrix[x%4, y%4]-1/2f));
+                    pixel.G = (int) (pixel.G+255/4f*(matrix[x%4, y%4]-1/2f));
+                    pixel.B = (int) (pixel.B+255/4f*(matrix[x%4, y%4]-1/2f));
+                    result.SetPixel(x, y, ColorHelpers.GetMinDistance(pixel, colorPalette));
                 }    
             }
             return result.Bitmap;
@@ -99,28 +132,5 @@ namespace PixelPalette.Algorithm {
             }
             return result.Bitmap;
         }
-        
-
-        /*
-        def dither2x2(image, colors, errorR1=1/4, errorR2=1/4):
-            pixels = list(image.getdata())
-            for i in range(len(pixels)):
-                bestColorId = 0
-                bestColorDistance = getDistance(pixels[i], colors[0])
-                for j in range(1, len(colors)):
-                    dist = getDistance(pixels[i], colors[j])
-                    if dist < bestColorDistance:
-                        bestColorDistance = dist
-                        bestColorId = j
-                error = numpy.subtract(pixels[i], colors[bestColorId])
-                pixels[i] = colors[bestColorId]
-                if i%image.width != image.width-1:
-                    pixels[i+1] = tuple(numpy.round(numpy.add(pixels[i+1], error*errorR1)).astype(int))
-                    if i+image.width+1 < len(pixels):
-                        pixels[i+image.width+1] = tuple(numpy.round(numpy.add(pixels[i+image.width+1], error*errorR2).astype(int)))
-                if i+image.width < len(pixels):
-                    pixels[i+image.width] = tuple(numpy.round(numpy.add(pixels[i+image.width], error*errorR1).astype(int)))
-            return pixels
-        */
     }
 }
