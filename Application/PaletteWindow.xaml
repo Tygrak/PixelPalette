@@ -20,17 +20,30 @@
         
         <TabControl>
             <TabItem Header="Palette Colors" VerticalContentAlignment="Center">
-                <ListBox Name="ColorsListBox">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <DockPanel LastChildFill="false">
-                                <TextBlock DockPanel.Dock="Left" Text="{Binding Hex}" VerticalAlignment="Center"/>
-                                <Border DockPanel.Dock="Right" BorderBrush="Black" BorderThickness="2" Background="{Binding Brush}" CornerRadius="4" Padding="4" Width="50" Height="20" Margin="8">
-                                </Border>
-                            </DockPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <DockPanel Margin="10">
+                    <DockPanel DockPanel.Dock="Bottom" LastChildFill="false">
+                        <Button Name="ClearPalette" DockPanel.Dock="Left" Click="OnClearPaletteButtonClick" Margin="10">
+                            Clear Palette
+                        </Button>
+                        <Button Name="AddColor" DockPanel.Dock="Right" Click="OnAddColorButtonClick" Margin="10">
+                            Add Color
+                        </Button>
+                        <Button Name="RemoveColor" DockPanel.Dock="Right" Click="OnRemoveColorButtonClick" Margin="10">
+                            Remove Color
+                        </Button>
+                    </DockPanel>
+                    <ListBox Name="ColorsListBox">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <DockPanel LastChildFill="false">
+                                    <TextBlock DockPanel.Dock="Left" Text="{Binding Hex}" VerticalAlignment="Center"/>
+                                    <Border DockPanel.Dock="Right" BorderBrush="Black" BorderThickness="2" Background="{Binding Brush}" CornerRadius="4" Padding="4" Width="50" Height="20" Margin="8">
+                                    </Border>
+                                </DockPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </DockPanel>
             </TabItem>
             <TabItem Header="Median Cut" VerticalContentAlignment="Center">
                 <StackPanel>

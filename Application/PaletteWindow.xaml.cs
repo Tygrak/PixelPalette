@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using PixelPalette.Algorithm;
+using System;
 
 namespace PixelPalette {
     public class PaletteWindow : Window {
@@ -31,6 +32,13 @@ namespace PixelPalette {
             AvaloniaXamlLoader.Load(this);
             this.DataContext = this;
             colorsListBox = this.FindControl<ListBox>("ColorsListBox");
+            colorsListBox.DoubleTapped += async (s, e) => {
+                Color selectedColor = ((ColorPaletteItem) colorsListBox.SelectedItem).color;
+                SelectColorWindow dialog = new SelectColorWindow(selectedColor);
+                Color result = await dialog.ShowDialog<Color>(this);
+                ColorPalette[ColorPalette.IndexOf(selectedColor)] = result;
+                ReloadPaletteItems();
+            };
             ReloadPaletteItems();
             statusText = this.FindControl<TextBlock>("Status");
             medianCutAmountNumeric = this.FindControl<NumericUpDown>("MedianCutColorAmount");
@@ -68,6 +76,26 @@ namespace PixelPalette {
 
         private void OnMedianCutButtonClick(object sender, RoutedEventArgs eventArgs) {
             GeneratePalette();
+        }
+
+        private void OnClearPaletteButtonClick(object sender, RoutedEventArgs eventArgs) {
+            ColorPalette.Clear();
+            ReloadPaletteItems();
+        }
+
+        private async void OnAddColorButtonClick(object sender, RoutedEventArgs eventArgs) {
+            SelectColorWindow dialog = new SelectColorWindow();
+            Color result = await dialog.ShowDialog<Color>(this);
+            ColorPalette.Add(result);
+            ReloadPaletteItems();
+        }
+
+        private void OnRemoveColorButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (colorsListBox.SelectedItem != null) {
+                Color selectedColor = ((ColorPaletteItem) colorsListBox.SelectedItem).color;
+                ColorPalette.Remove(selectedColor);
+                ReloadPaletteItems();
+            }
         }
 
         private void OnOkButtonClick(object sender, RoutedEventArgs eventArgs) {

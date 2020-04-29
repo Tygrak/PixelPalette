@@ -60,7 +60,7 @@ namespace PixelPalette {
         }
 
         private async void OnThresholdButtonClick(object sender, RoutedEventArgs eventArgs) {
-            if (mainWindow.CurrentBitmap != null) {
+            if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
                 statusText.Text = "Thresholding image";
                 mainWindow.CurrentBitmap = await Task.Run(() => Ditherer.ClosestColor(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray())); 
                 mainWindow.ReloadMainImage();
@@ -69,7 +69,7 @@ namespace PixelPalette {
         }
 
         private async void OnRandomButtonClick(object sender, RoutedEventArgs eventArgs) {
-            if (mainWindow.CurrentBitmap != null) {
+            if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
                 statusText.Text = "Dithering image";
                 float bias = (float) randomBiasNumeric.Value;
                 mainWindow.CurrentBitmap = await Task.Run(() => Ditherer.RandomDither(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray(), bias)); 
@@ -79,7 +79,7 @@ namespace PixelPalette {
         }
 
         private async void OnOrderedButtonClick(object sender, RoutedEventArgs eventArgs) {
-            if (mainWindow.CurrentBitmap != null) {
+            if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
                 statusText.Text = "Dithering image";
                 //todo: configurable size
                 mainWindow.CurrentBitmap = await Task.Run(() => Ditherer.OrderedDither(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray())); 
@@ -89,7 +89,7 @@ namespace PixelPalette {
         }
 
         private async void OnFloSteinButtonClick(object sender, RoutedEventArgs eventArgs) {
-            if (mainWindow.CurrentBitmap != null) {
+            if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
                 statusText.Text = "Dithering image";
                 float[] errorMatrix = new float[4];
                 for (int i = 0; i < errorMatrix.Length; i++) {
@@ -102,7 +102,7 @@ namespace PixelPalette {
         }
 
         private async void OnMinAvgErrButtonClick(object sender, RoutedEventArgs eventArgs) {
-            if (mainWindow.CurrentBitmap != null) {
+            if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
                 statusText.Text = "Dithering image";
                 float[] errorMatrix = new float[12];
                 for (int i = 0; i < errorMatrix.Length; i++) {
