@@ -18,6 +18,8 @@ namespace PixelPalette {
         private ListBox colorsListBox;
 
         private NumericUpDown medianCutAmountNumeric;
+        private NumericUpDown kMeansAmountNumeric;
+        private NumericUpDown kMeansStepsNumeric;
 
         public bool Showing = false;
         
@@ -42,6 +44,8 @@ namespace PixelPalette {
             ReloadPaletteItems();
             statusText = this.FindControl<TextBlock>("Status");
             medianCutAmountNumeric = this.FindControl<NumericUpDown>("MedianCutColorAmount");
+            kMeansAmountNumeric = this.FindControl<NumericUpDown>("KMeansColorAmount");
+            kMeansStepsNumeric = this.FindControl<NumericUpDown>("KMeansStepAmount");
             Closing += (s, e) => {
                 Hide();
                 Showing = false;
@@ -49,33 +53,29 @@ namespace PixelPalette {
             };
         }
 
-        private async void GeneratePalette() {
-            if (mainWindow.CurrentBitmap != null) {
-                statusText.Text = "Generating Palette";
-                int amount = (int) medianCutAmountNumeric.Value;
-                ColorPalette = await Task.Run(() => ColorHelpers.MedianCut(mainWindow.CurrentBitmap, amount));
-                ReloadPaletteItems();
-                //ReloadMainImage();
-                statusText.Text = "";
-            }
-        }
-
-        private async void SortImage() {
-            if (mainWindow.CurrentBitmap != null) {
-                statusText.Text = "Sorting image";
-                int amount = (int) medianCutAmountNumeric.Value;
-                mainWindow.CurrentBitmap = await Task.Run(() => ColorHelpers.SortColors(mainWindow.CurrentBitmap, amount)); 
-                mainWindow.ReloadMainImage();
-                statusText.Text = "";
-            }
-        }
-
         private void ReloadPaletteItems() {
             colorsListBox.Items = ColorPalette.Select(c => new ColorPaletteItem(c));
         }
 
-        private void OnMedianCutButtonClick(object sender, RoutedEventArgs eventArgs) {
-            GeneratePalette();
+        private async void OnMedianCutButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.CurrentBitmap != null) {
+                statusText.Text = "Generating Palette";
+                int amount = (int) medianCutAmountNumeric.Value;
+                ColorPalette = await Task.Run(() => PaletteGeneration.MedianCut(mainWindow.CurrentBitmap, amount));
+                ReloadPaletteItems();
+                statusText.Text = "";
+            }
+        }
+
+        private async void OnKMeansButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.CurrentBitmap != null) {
+                statusText.Text = "Generating Palette";
+                int amount = (int) kMeansAmountNumeric.Value;
+                int steps = (int) kMeansStepsNumeric.Value;
+                ColorPalette = await Task.Run(() => PaletteGeneration.KMeans(mainWindow.CurrentBitmap, amount, steps));
+                ReloadPaletteItems();
+                statusText.Text = "";
+            }
         }
 
         private void OnClearPaletteButtonClick(object sender, RoutedEventArgs eventArgs) {
@@ -103,8 +103,15 @@ namespace PixelPalette {
             Hide();
         }
 
-        private void OnSortButtonClick(object sender, RoutedEventArgs eventArgs) {
-            SortImage();
+        private async void OnSortButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.CurrentBitmap != null) {
+                statusText.Text = "Sorting image";
+                int amount = (int) medianCutAmountNumeric.Value;
+                mainWindow.CurrentBitmap = await Task.Run(() => PaletteGeneration.SortyColors(mainWindow.CurrentBitmap)); 
+                //mainWindow.CurrentBitmap = await Task.Run(() => PaletteGeneration.SortColors(mainWindow.CurrentBitmap, amount)); 
+                mainWindow.ReloadMainImage();
+                statusText.Text = "";
+            }
         }
     }
 }

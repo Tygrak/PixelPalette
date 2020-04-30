@@ -8,11 +8,11 @@
         Width="600"
         Height="400">
   <DockPanel>
-        <DockPanel DockPanel.Dock="Bottom">
+        <DockPanel DockPanel.Dock="Bottom" Margin="10">
             <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">
                 Close
             </Button>
-            <TextBlock Margin="10" Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
                 
             </TextBlock>
         </DockPanel>

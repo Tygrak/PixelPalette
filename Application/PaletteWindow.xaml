@@ -8,11 +8,11 @@
         Width="600"
         Height="600">
   <DockPanel>
-        <DockPanel DockPanel.Dock="Bottom">
+        <DockPanel DockPanel.Dock="Bottom" Margin="10">
             <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">
                 Close
             </Button>
-            <TextBlock Margin="10" Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
+            <TextBlock Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
                 
             </TextBlock>
         </DockPanel>
@@ -22,13 +22,13 @@
             <TabItem Header="Palette Colors" VerticalContentAlignment="Center">
                 <DockPanel Margin="10">
                     <DockPanel DockPanel.Dock="Bottom" LastChildFill="false">
-                        <Button Name="ClearPalette" DockPanel.Dock="Left" Click="OnClearPaletteButtonClick" Margin="10">
+                        <Button Name="ClearPaletteButton" DockPanel.Dock="Left" Click="OnClearPaletteButtonClick" Margin="10">
                             Clear Palette
                         </Button>
-                        <Button Name="AddColor" DockPanel.Dock="Right" Click="OnAddColorButtonClick" Margin="10">
+                        <Button Name="AddColorButton" DockPanel.Dock="Right" Click="OnAddColorButtonClick" Margin="10">
                             Add Color
                         </Button>
-                        <Button Name="RemoveColor" DockPanel.Dock="Right" Click="OnRemoveColorButtonClick" Margin="10">
+                        <Button Name="RemoveColorButton" DockPanel.Dock="Right" Click="OnRemoveColorButtonClick" Margin="10">
                             Remove Color
                         </Button>
                     </DockPanel>
@@ -49,14 +49,31 @@
                 <StackPanel>
                     <DockPanel LastChildFill="false" Margin="10">
                         <TextBlock DockPanel.Dock="Left" Text="Result color amount:" VerticalAlignment="Center"/>
-                        <NumericUpDown DockPanel.Dock="Right" Name="MedianCutColorAmount" Width="200" Value="8" />
+                        <NumericUpDown DockPanel.Dock="Right" Name="MedianCutColorAmount" Width="200" Value="8" Minimum="2" />
                     </DockPanel>
                     <DockPanel LastChildFill="false" Margin="10">
-                        <Button Name="SortPicture" DockPanel.Dock="Left" Click="OnSortButtonClick">
+                        <Button Name="SortPictureButton" DockPanel.Dock="Left" Click="OnSortButtonClick">
                             Preview Median Cut
                         </Button>
-                        <Button Name="MedianCut" DockPanel.Dock="Right" Click="OnMedianCutButtonClick">
+                        <Button Name="MedianCutButton" DockPanel.Dock="Right" Click="OnMedianCutButtonClick">
                             Median Cut
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="K-Means" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Result color amount:" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="KMeansColorAmount" Width="200" Value="8" Minimum="2" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Max steps:" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="KMeansStepAmount" Width="200" Value="10" Minimum="1" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="KMeansButton" DockPanel.Dock="Right" Click="OnKMeansButtonClick">
+                            K-Means Clustering
                         </Button>
                     </DockPanel>
                 </StackPanel>
