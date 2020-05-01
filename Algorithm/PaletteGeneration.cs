@@ -104,18 +104,7 @@ namespace PixelPalette.Algorithm {
             return result.Bitmap;
         }
 
-        public static Bitmap SortyColors(Bitmap bitmap) {
-            DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
-            List<Color> colors = BitmapConvert.ColorArrayFromBitmap(bitmap).ToList();
-            colors.Sort((a, b) => a.GetSaturation().CompareTo(b.GetSaturation()));
-            for (int x = 0; x < bitmap.Width; x++) {
-                for (int y = 0; y < bitmap.Height; y++) {
-                    result.SetPixel(x, y, colors[x+y*bitmap.Width]);
-                }    
-            }
-            return result.Bitmap;
-        }
-
+        //initialization could be improved
         public static List<Color> KMeans(Bitmap bitmap, int count, int maxSteps) {
             Color[] colors = BitmapConvert.ColorArrayFromBitmap(bitmap);
             int[] clusters = new int[colors.Length];
@@ -155,6 +144,14 @@ namespace PixelPalette.Algorithm {
                 }
             }
             return means.ToList();
+        }
+
+        public static List<Color> FakeDuoTone(int count, float hue, float saturation) {
+            List<Color> result = new List<Color>();
+            for (int i = 0; i < count; i++) {
+                result.Add(ColorHelpers.HslToColor((hue, saturation, (float) i/count+1f/(count*2))));
+            }
+            return result;
         }
     }
 }

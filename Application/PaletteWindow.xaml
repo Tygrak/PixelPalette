@@ -56,7 +56,7 @@
                             Preview Median Cut
                         </Button>
                         <Button Name="MedianCutButton" DockPanel.Dock="Right" Click="OnMedianCutButtonClick">
-                            Median Cut
+                            Generate Median Cut Palette
                         </Button>
                     </DockPanel>
                 </StackPanel>
@@ -73,7 +73,33 @@
                     </DockPanel>
                     <DockPanel LastChildFill="false" Margin="10">
                         <Button Name="KMeansButton" DockPanel.Dock="Right" Click="OnKMeansButtonClick">
-                            K-Means Clustering
+                            Generate K-Means Clustering Palette
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Duo Tone" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Result color amount:" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="DuoToneColorAmount" Width="200" Value="16" Minimum="2" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Color hue (HSL):" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="DuoToneHue" Width="200" Value="0" Minimum="0" Maximum="360" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Color saturation (HSL):" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="DuoToneSaturation" Width="200" Value="0.5" Minimum="0" Maximum="1" Increment="0.01" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="DuoTonePickColorButton" DockPanel.Dock="Left" Click="OnDuoTonePickColorButtonClick">
+                            Pick Color
+                        </Button>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="DuoToneButton" DockPanel.Dock="Right" Click="OnDuoToneButtonClick">
+                            Generate Duo Tone Palette
                         </Button>
                     </DockPanel>
                 </StackPanel>

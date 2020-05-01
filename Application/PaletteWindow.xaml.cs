@@ -20,6 +20,9 @@ namespace PixelPalette {
         private NumericUpDown medianCutAmountNumeric;
         private NumericUpDown kMeansAmountNumeric;
         private NumericUpDown kMeansStepsNumeric;
+        private NumericUpDown duoToneAmountNumeric;
+        private NumericUpDown duoToneHueNumeric;
+        private NumericUpDown duoToneSaturationNumeric;
 
         public bool Showing = false;
         
@@ -46,6 +49,9 @@ namespace PixelPalette {
             medianCutAmountNumeric = this.FindControl<NumericUpDown>("MedianCutColorAmount");
             kMeansAmountNumeric = this.FindControl<NumericUpDown>("KMeansColorAmount");
             kMeansStepsNumeric = this.FindControl<NumericUpDown>("KMeansStepAmount");
+            duoToneAmountNumeric = this.FindControl<NumericUpDown>("DuoToneColorAmount");
+            duoToneHueNumeric = this.FindControl<NumericUpDown>("DuoToneHue");
+            duoToneSaturationNumeric = this.FindControl<NumericUpDown>("DuoToneSaturation");
             Closing += (s, e) => {
                 Hide();
                 Showing = false;
@@ -107,11 +113,28 @@ namespace PixelPalette {
             if (mainWindow.CurrentBitmap != null) {
                 statusText.Text = "Sorting image";
                 int amount = (int) medianCutAmountNumeric.Value;
-                mainWindow.CurrentBitmap = await Task.Run(() => PaletteGeneration.SortyColors(mainWindow.CurrentBitmap)); 
-                //mainWindow.CurrentBitmap = await Task.Run(() => PaletteGeneration.SortColors(mainWindow.CurrentBitmap, amount)); 
+                mainWindow.CurrentBitmap = await Task.Run(() => PaletteGeneration.SortColors(mainWindow.CurrentBitmap, amount)); 
                 mainWindow.ReloadMainImage();
                 statusText.Text = "";
             }
+        }
+
+        private async void OnDuoTonePickColorButtonClick(object sender, RoutedEventArgs eventArgs) {
+            SelectColorWindow dialog = new SelectColorWindow();
+            Color result = await dialog.ShowDialog<Color>(this);
+            var hslColor = ColorHelpers.ColorToHsl(result);
+            duoToneHueNumeric.Value = hslColor.H;
+            duoToneSaturationNumeric.Value = hslColor.S;
+        }
+
+        private async void OnDuoToneButtonClick(object sender, RoutedEventArgs eventArgs) {
+            statusText.Text = "Generating Palette";
+            int amount = (int) duoToneAmountNumeric.Value;
+            float hue = (float) (duoToneHueNumeric.Value%360);
+            float saturation = (float) duoToneSaturationNumeric.Value;
+            ColorPalette = await Task.Run(() => PaletteGeneration.FakeDuoTone(amount, hue, saturation));
+            ReloadPaletteItems();
+            statusText.Text = "";
         }
     }
 }
