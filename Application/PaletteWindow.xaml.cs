@@ -23,13 +23,22 @@ namespace PixelPalette {
         private NumericUpDown duoToneAmountNumeric;
         private NumericUpDown duoToneHueNumeric;
         private NumericUpDown duoToneSaturationNumeric;
+        private TextBox importExportSeparatorTextBox;
+
+        private string importExportSeparator {
+            get {
+                string separator = importExportSeparatorTextBox.Text;
+                separator = separator.Replace(@"\n", "\n");
+                return separator;
+            }
+        }
 
         public bool Showing = false;
         
         public List<Color> ColorPalette {get; set;}
 
         public PaletteWindow() {
-            ColorPalette = new List<Color> {Color.Red, Color.Green, Color.FromArgb(20, 20, 180), Color.Black, Color.White};
+            ColorPalette = new List<Color> {Color.Black, Color.White};
             InitializeComponent();
         }
 
@@ -37,13 +46,7 @@ namespace PixelPalette {
             AvaloniaXamlLoader.Load(this);
             this.DataContext = this;
             colorsListBox = this.FindControl<ListBox>("ColorsListBox");
-            colorsListBox.DoubleTapped += async (s, e) => {
-                Color selectedColor = ((ColorPaletteItem) colorsListBox.SelectedItem).color;
-                SelectColorWindow dialog = new SelectColorWindow(selectedColor);
-                Color result = await dialog.ShowDialog<Color>(this);
-                ColorPalette[ColorPalette.IndexOf(selectedColor)] = result;
-                ReloadPaletteItems();
-            };
+            colorsListBox.DoubleTapped += OnColorListBoxDoubleTapped;
             ReloadPaletteItems();
             statusText = this.FindControl<TextBlock>("Status");
             medianCutAmountNumeric = this.FindControl<NumericUpDown>("MedianCutColorAmount");
@@ -52,11 +55,23 @@ namespace PixelPalette {
             duoToneAmountNumeric = this.FindControl<NumericUpDown>("DuoToneColorAmount");
             duoToneHueNumeric = this.FindControl<NumericUpDown>("DuoToneHue");
             duoToneSaturationNumeric = this.FindControl<NumericUpDown>("DuoToneSaturation");
+            importExportSeparatorTextBox = this.FindControl<TextBox>("ImportSeparator");
             Closing += (s, e) => {
                 Hide();
                 Showing = false;
                 e.Cancel = true;
             };
+        }
+
+        private async void OnColorListBoxDoubleTapped(object sender, RoutedEventArgs eventArgs) {
+            if (colorsListBox.SelectedItem == null) {
+                return;
+            }
+            Color selectedColor = ((ColorPaletteItem) colorsListBox.SelectedItem).color;
+            SelectColorWindow dialog = new SelectColorWindow(selectedColor);
+            Color result = await dialog.ShowDialog<Color>(this);
+            ColorPalette[ColorPalette.IndexOf(selectedColor)] = result;
+            ReloadPaletteItems();
         }
 
         private void ReloadPaletteItems() {
@@ -135,6 +150,33 @@ namespace PixelPalette {
             ColorPalette = await Task.Run(() => PaletteGeneration.FakeDuoTone(amount, hue, saturation));
             ReloadPaletteItems();
             statusText.Text = "";
+        }
+
+        private async void OnImportButtonClick(object sender, RoutedEventArgs eventArgs) {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.AllowMultiple = false;
+            openFileDialog.Filters.Add(new FileDialogFilter() {Name = "Palette File", Extensions =  {"palette", "txt"}});
+            string[] path = await openFileDialog.ShowAsync(this);
+            if (path == null || path.Length < 1) {
+                return;
+            }
+            string colors = File.ReadAllText(path[0]);
+            ColorPalette = colors.Split(importExportSeparator).Where(s => !string.IsNullOrWhiteSpace(s))
+                                 .Select(s => ColorHelpers.HexToColor(s)).Distinct().ToList();
+            ReloadPaletteItems();
+        }
+
+        private async void OnExportButtonClick(object sender, RoutedEventArgs eventArgs) {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.DefaultExtension = "palette";
+            saveFileDialog.Filters.Add(new FileDialogFilter() {Name = "Palette File", Extensions =  {"palette", "txt"}});
+            string path = await saveFileDialog.ShowAsync(this);
+            if (path == null || path == "") {
+                return;
+            }
+            path = path.Contains('.') ? path : path+".palette";
+            string result = string.Join(importExportSeparator, ColorPalette.Select(c => ColorHelpers.ColorToHex(c)));
+            File.WriteAllText(path, result);
         }
     }
 }

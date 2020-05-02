@@ -13,14 +13,30 @@
                 Ok
             </Button>
         </DockPanel>
-        <StackPanel>
-            <DockPanel LastChildFill="false" Margin="10">
+        <StackPanel Name="ColorStackPanel" Margin="10">
+            <DockPanel LastChildFill="false">
                 <TextBlock DockPanel.Dock="Left" Text="Color as RGB (0-255):" VerticalAlignment="Center"/>
-                <Grid DockPanel.Dock="Right" Width="220" ColumnDefinitions="1*,1*,1*" RowDefinitions="Auto" Margin="5">
+                <Grid DockPanel.Dock="Right" Width="220" ColumnDefinitions="1*,1*,1*" RowDefinitions="1*, 1*" Margin="5">
                     <NumericUpDown Grid.Row="0" Grid.Column="0" Name="ColorR" Value="0" Minimum="0" Maximum="255" />
                     <NumericUpDown Grid.Row="0" Grid.Column="1" Name="ColorG" Value="0" Minimum="0" Maximum="255" />
                     <NumericUpDown Grid.Row="0" Grid.Column="2" Name="ColorB" Value="0" Minimum="0" Maximum="255" />
                 </Grid>
+            </DockPanel>
+            <DockPanel LastChildFill="false">
+                <TextBlock DockPanel.Dock="Left" Text="Color as HSL:" VerticalAlignment="Center"/>
+                <Grid DockPanel.Dock="Right" Width="220" ColumnDefinitions="1*,1*,1*" RowDefinitions="1*, 1*" Margin="5">
+                    <NumericUpDown Grid.Row="0" Grid.Column="0" Name="ColorH" Value="0" Minimum="0" Maximum="360" />
+                    <NumericUpDown Grid.Row="0" Grid.Column="1" Name="ColorS" Value="0" Minimum="0" Maximum="1" Increment="0.01" />
+                    <NumericUpDown Grid.Row="0" Grid.Column="2" Name="ColorL" Value="0" Minimum="0" Maximum="1" Increment="0.01" />
+                </Grid>
+            </DockPanel>
+            <DockPanel LastChildFill="false">
+                <TextBlock DockPanel.Dock="Left" Text="Hex code:" VerticalAlignment="Center"/>
+                <TextBox DockPanel.Dock="Right" Width="73.333" Margin="5" Name="ColorHex" Text="#000000" />
+            </DockPanel>
+            <DockPanel LastChildFill="false">
+                <Border Width="220" Height="20" Margin="4"
+                        DockPanel.Dock="Right" Name="ColorPreview" BorderBrush="Black" BorderThickness="2" Background="{Binding Brush}" CornerRadius="4" />
             </DockPanel>
         </StackPanel>
     </DockPanel>

@@ -104,6 +104,24 @@
                     </DockPanel>
                 </StackPanel>
             </TabItem>
+            <TabItem Header="Import/Export" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Color separator:" VerticalAlignment="Center"/>
+                        <TextBox DockPanel.Dock="Right" Name="ImportSeparator" Width="200" Text="\n" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="ImportButton" DockPanel.Dock="Right" Click="OnImportButtonClick">
+                            Import Palette
+                        </Button>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="ExportButton" DockPanel.Dock="Right" Click="OnExportButtonClick">
+                            Export Palette
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

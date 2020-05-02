@@ -99,5 +99,21 @@ namespace PixelPalette.Algorithm {
             //return Color.Black;
             return Color.FromArgb((int) MathF.Round((result.r+m)*255), (int) MathF.Round((result.g+m)*255), (int) MathF.Round((result.b+m)*255));
         }
+
+        public static Color HslToColor(float H, float S, float L) {
+            return HslToColor((H, S, L));
+        }
+
+        public static string ColorToHex(Color color) {
+            return $"#{color.R.ToString("X2")}{color.G.ToString("X2")}{color.B.ToString("X2")}";
+        }
+
+        public static Color HexToColor(string hex) {
+            hex = hex.Trim().Replace("#", "").ToLower();
+            int r = int.Parse(""+hex[0]+hex[1], System.Globalization.NumberStyles.HexNumber);
+            int g = int.Parse(""+hex[2]+hex[3], System.Globalization.NumberStyles.HexNumber);
+            int b = int.Parse(""+hex[4]+hex[5], System.Globalization.NumberStyles.HexNumber);
+            return Color.FromArgb(r, g, b);
+        }
     }
 }
