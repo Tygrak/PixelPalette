@@ -16,7 +16,7 @@ namespace PixelPalette {
         private TextBlock statusText;
 
         private NumericUpDown randomBiasNumeric;
-        private NumericUpDown thresholdMatrixSizeNumeric;
+        private NumericUpDown[] orderedMatrixNumeric = new NumericUpDown[16];
         private NumericUpDown[] oneRowErrorNumeric = new NumericUpDown[4];
         private NumericUpDown oneRowErrorMultiplierNumeric;
         private NumericUpDown[] twoRowErrorNumeric = new NumericUpDown[12];
@@ -33,7 +33,6 @@ namespace PixelPalette {
             this.DataContext = this;
             statusText = this.FindControl<TextBlock>("Status");
             randomBiasNumeric = this.FindControl<NumericUpDown>("RandomBias");
-            thresholdMatrixSizeNumeric = this.FindControl<NumericUpDown>("ThresholdMatrixSize");
             oneRowErrorNumeric[0] = this.FindControl<NumericUpDown>("OneRowError20");
             oneRowErrorNumeric[1] = this.FindControl<NumericUpDown>("OneRowError01");
             oneRowErrorNumeric[2] = this.FindControl<NumericUpDown>("OneRowError11");
@@ -52,6 +51,11 @@ namespace PixelPalette {
             twoRowErrorNumeric[10] = this.FindControl<NumericUpDown>("TwoRowError32");
             twoRowErrorNumeric[11] = this.FindControl<NumericUpDown>("TwoRowError42");
             twoRowErrorMultiplierNumeric = this.FindControl<NumericUpDown>("TwoRowErrorMultiplier");
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    orderedMatrixNumeric[i+j*4] = this.FindControl<NumericUpDown>($"OrderedMatrix{i}{j}");
+                }
+            }
             Closing += (s, e) => {
                 Hide();
                 Showing = false;
@@ -81,8 +85,12 @@ namespace PixelPalette {
         private async void OnOrderedButtonClick(object sender, RoutedEventArgs eventArgs) {
             if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
                 statusText.Text = "Dithering image";
+                float[,] matrix = new float[4, 4];
+                for (int i = 0; i < orderedMatrixNumeric.Length; i++) {
+                    matrix[i%4, i/4] = ((float) orderedMatrixNumeric[i].Value)/orderedMatrixNumeric.Length;
+                }
                 //todo: configurable size
-                mainWindow.CurrentBitmap = await Task.Run(() => Ditherer.OrderedDither(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray())); 
+                mainWindow.CurrentBitmap = await Task.Run(() => Ditherer.OrderedDither(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray(), matrix)); 
                 mainWindow.ReloadMainImage();
                 statusText.Text = "";
             }

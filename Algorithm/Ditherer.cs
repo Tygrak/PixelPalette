@@ -76,17 +76,16 @@ namespace PixelPalette.Algorithm {
         }
 
         //todo: configurable size
-        public static Bitmap OrderedDither(Bitmap bitmap, Color[] colorPalette) {
-            float[,] matrix = new float[,] {{0, 8/16f, 2/16f, 10/16f}, {12/16f, 4/16f, 14/16f, 6/16f}, 
-                                            {3/16f, 11/16f, 1/16f, 9/16f}, {15/16f, 7/16f, 13/16f, 5/16f}};
+        public static Bitmap OrderedDither(Bitmap bitmap, Color[] colorPalette, float[,] matrix) {
             (int R, int G, int B)[] colors = BitmapConvert.IntArrayFromBitmap(bitmap);
             DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
             for (int x = 0; x < bitmap.Width; x++) {
                 for (int y = 0; y < bitmap.Height; y++) {
                     (int R, int G, int B) pixel = colors[x+y*bitmap.Width];
-                    pixel.R = (int) (pixel.R+255/4f*(matrix[x%4, y%4]-1/2f));
-                    pixel.G = (int) (pixel.G+255/4f*(matrix[x%4, y%4]-1/2f));
-                    pixel.B = (int) (pixel.B+255/4f*(matrix[x%4, y%4]-1/2f));
+                    float m = matrix[x%matrix.GetLength(0), y%matrix.GetLength(1)];
+                    pixel.R = (int) (pixel.R+255/4f*(m-1/2f));
+                    pixel.G = (int) (pixel.G+255/4f*(m-1/2f));
+                    pixel.B = (int) (pixel.B+255/4f*(m-1/2f));
                     result.SetPixel(x, y, ColorHelpers.GetMinDistance(pixel, colorPalette));
                 }    
             }
