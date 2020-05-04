@@ -1,0 +1,60 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="PixelPalette.AdjustmentsWindow"
+        Title="Adjustments - PixelPalette"
+        Width="600"
+        Height="600">
+  <DockPanel>
+        <DockPanel DockPanel.Dock="Bottom" Margin="10">
+            <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">
+                Close
+            </Button>
+            <TextBlock Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
+                
+            </TextBlock>
+        </DockPanel>
+        
+        
+        <TabControl>
+            <TabItem Header="Transform" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="New width:" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="ResizeWidth" Width="200" Value="512" Minimum="1" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="New height:" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="ResizeHeight" Width="200" Value="512" Minimum="1" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="ResizeButton" DockPanel.Dock="Right" Click="OnResizeButtonClick">
+                            Resize
+                        </Button>
+                    </DockPanel>
+                    <Border Margin="10" Height="1" BorderBrush="Black" BorderThickness="1" />
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Rotate:" VerticalAlignment="Center"/>
+                        <Button Name="RotateRightButton" DockPanel.Dock="Right" Click="OnRotateRightButtonClick">
+                            90° Clockwise
+                        </Button>
+                        <Button Name="RotateLeftButton" DockPanel.Dock="Right" Click="OnRotateLeftButtonClick">
+                            90° Counterclockwise
+                        </Button>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Flip:" VerticalAlignment="Center"/>
+                        <Button Name="FlipXButton" DockPanel.Dock="Right" Click="OnFlipXButtonClick">
+                            X Axis
+                        </Button>
+                        <Button Name="FlipYButton" DockPanel.Dock="Right" Click="OnFlipYButtonClick">
+                            Y Axis
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>

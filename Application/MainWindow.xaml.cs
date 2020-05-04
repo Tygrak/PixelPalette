@@ -25,7 +25,7 @@ namespace PixelPalette {
 
         private PaletteWindow paletteWindow;
         private DitherWindow ditherWindow;
-        //private DitherWindow adjustmentWindow;
+        private AdjustmentsWindow adjustmentsWindow;
         
         private LinkedList<Bitmap> undoBitmaps = new LinkedList<Bitmap>();
         private LinkedList<Bitmap> redoBitmaps = new LinkedList<Bitmap>();
@@ -42,8 +42,8 @@ namespace PixelPalette {
             paletteWindow.mainWindow = this;
             ditherWindow = new DitherWindow();
             ditherWindow.mainWindow = this;
-            undoButton.IsEnabled = false;
-            redoButton.IsEnabled = false;
+            adjustmentsWindow = new AdjustmentsWindow();
+            adjustmentsWindow.mainWindow = this;
         }
 
         private void InitializeComponent() {
@@ -53,6 +53,8 @@ namespace PixelPalette {
             statusText = this.FindControl<TextBlock>("Status");
             undoButton = this.FindControl<Button>("UndoButton");
             redoButton = this.FindControl<Button>("RedoButton");
+            undoButton.IsEnabled = false;
+            redoButton.IsEnabled = false;
         }
 
         private async Task<string> GetOpenImagePath() {
@@ -125,7 +127,7 @@ namespace PixelPalette {
 
         private void ReloadMainImage() {
             mainImage.Source = BitmapConvert.ConvertToAvaloniaBitmap(CurrentBitmap);
-            imageSizeText.Text = $"{InitialBitmap.Size.Width}x{InitialBitmap.Size.Height}";
+            imageSizeText.Text = $"{CurrentBitmap.Size.Width}x{CurrentBitmap.Size.Height}";
         }
 
         private async void OnOpenFileButtonClick(object sender, RoutedEventArgs eventArgs) {
@@ -185,11 +187,11 @@ namespace PixelPalette {
         }
 
         private void OnAdjustmentsButtonClick(object sender, RoutedEventArgs eventArgs) {
-            if (paletteWindow.Showing) {
+            if (adjustmentsWindow.Showing) {
                 return;
             }
-            paletteWindow.Showing = true;
-            paletteWindow.ShowDialog(this);
+            adjustmentsWindow.Showing = true;
+            adjustmentsWindow.ShowDialog(this);
         }
     }
 }
