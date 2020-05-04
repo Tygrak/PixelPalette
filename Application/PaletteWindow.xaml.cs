@@ -128,8 +128,8 @@ namespace PixelPalette {
             if (mainWindow.CurrentBitmap != null) {
                 statusText.Text = "Sorting image";
                 int amount = (int) medianCutAmountNumeric.Value;
-                mainWindow.CurrentBitmap = await Task.Run(() => PaletteGeneration.SortColors(mainWindow.CurrentBitmap, amount)); 
-                mainWindow.ReloadMainImage();
+                Bitmap bitmap = await Task.Run(() => PaletteGeneration.SortColors(mainWindow.CurrentBitmap, amount)); 
+                mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
             }
         }

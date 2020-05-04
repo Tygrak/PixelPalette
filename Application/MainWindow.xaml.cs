@@ -7,6 +7,7 @@ using AvaloniaBitmap = Avalonia.Media.Imaging.Bitmap;
 using System.Drawing.Imaging;
 using System.Drawing;
 using Avalonia.Interactivity;
+using Avalonia.Input;
 using System.Threading.Tasks;
 using System.IO;
 using System.Collections.Generic;
@@ -19,11 +20,17 @@ namespace PixelPalette {
         private TextBlock imageSizeText;
         private TextBlock statusText;
 
+        private Button undoButton;
+        private Button redoButton;
+
         private PaletteWindow paletteWindow;
         private DitherWindow ditherWindow;
-
+        //private DitherWindow adjustmentWindow;
+        
+        private LinkedList<Bitmap> undoBitmaps = new LinkedList<Bitmap>();
+        private LinkedList<Bitmap> redoBitmaps = new LinkedList<Bitmap>();
         public Bitmap InitialBitmap {get; set;} = null;
-        public Bitmap CurrentBitmap {get; set;} = null;
+        public Bitmap CurrentBitmap {get; private set;} = null;
 
         public List<Color> ColorPalette {get {return paletteWindow.ColorPalette;}}
 
@@ -35,6 +42,8 @@ namespace PixelPalette {
             paletteWindow.mainWindow = this;
             ditherWindow = new DitherWindow();
             ditherWindow.mainWindow = this;
+            undoButton.IsEnabled = false;
+            redoButton.IsEnabled = false;
         }
 
         private void InitializeComponent() {
@@ -42,6 +51,8 @@ namespace PixelPalette {
             mainImage = this.FindControl<AvaloniaImage>("MainImage");
             imageSizeText = this.FindControl<TextBlock>("ImageSize");
             statusText = this.FindControl<TextBlock>("Status");
+            undoButton = this.FindControl<Button>("UndoButton");
+            redoButton = this.FindControl<Button>("RedoButton");
         }
 
         private async Task<string> GetOpenImagePath() {
@@ -66,7 +77,53 @@ namespace PixelPalette {
             return result;
         }
 
-        public void ReloadMainImage() {
+        public void UndoImage() {
+            if (undoBitmaps.Count == 0) {
+                return;
+            }
+            if (CurrentBitmap != null) {
+                redoBitmaps.AddLast(CurrentBitmap);
+                redoButton.IsEnabled = true;
+            }
+            CurrentBitmap = undoBitmaps.Last();
+            undoBitmaps.RemoveLast();
+            ReloadMainImage();
+            if (undoBitmaps.Count == 0) {
+                undoButton.IsEnabled = false;
+            }
+        }
+
+        public void RedoImage() {
+            if (redoBitmaps.Count == 0) {
+                return;
+            }
+            if (CurrentBitmap != null) {
+                undoBitmaps.AddLast(CurrentBitmap);
+                undoButton.IsEnabled = true;
+            }
+            CurrentBitmap = redoBitmaps.Last();
+            redoBitmaps.RemoveLast();
+            ReloadMainImage();
+            if (redoBitmaps.Count == 0) {
+                redoButton.IsEnabled = false;
+            }
+        }
+
+        public void ChangeMainImage(Bitmap bitmap) {
+            if (CurrentBitmap != null) {
+                if (undoBitmaps.Count > 15) {
+                    undoBitmaps.RemoveFirst();
+                }
+                undoBitmaps.AddLast(CurrentBitmap);
+                undoButton.IsEnabled = true;
+            }
+            redoBitmaps.Clear();
+            redoButton.IsEnabled = false;
+            CurrentBitmap = bitmap;
+            ReloadMainImage();
+        }
+
+        private void ReloadMainImage() {
             mainImage.Source = BitmapConvert.ConvertToAvaloniaBitmap(CurrentBitmap);
             imageSizeText.Text = $"{InitialBitmap.Size.Width}x{InitialBitmap.Size.Height}";
         }
@@ -76,6 +133,10 @@ namespace PixelPalette {
             if (path != null && path != "") {
                 InitialBitmap = new Bitmap(path);
                 CurrentBitmap = InitialBitmap;
+                undoBitmaps.Clear();
+                undoButton.IsEnabled = false;
+                redoBitmaps.Clear();
+                redoButton.IsEnabled = false;
                 ReloadMainImage();
             }
         }
@@ -88,6 +149,14 @@ namespace PixelPalette {
             if (path != null && path != "") {
                 CurrentBitmap.Save(path);
             }
+        }
+
+        private void OnUndoButtonClick(object sender, RoutedEventArgs eventArgs) {
+            UndoImage();
+        }
+
+        private void OnRedoButtonClick(object sender, RoutedEventArgs eventArgs) {
+            RedoImage();
         }
 
         private void OnRestoreButtonClick(object sender, RoutedEventArgs eventArgs) {
@@ -108,7 +177,14 @@ namespace PixelPalette {
         }
 
         private void OnPaletteButtonClick(object sender, RoutedEventArgs eventArgs) {
-            //GeneratePalette();
+            if (paletteWindow.Showing) {
+                return;
+            }
+            paletteWindow.Showing = true;
+            paletteWindow.ShowDialog(this);
+        }
+
+        private void OnAdjustmentsButtonClick(object sender, RoutedEventArgs eventArgs) {
             if (paletteWindow.Showing) {
                 return;
             }

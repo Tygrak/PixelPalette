@@ -8,11 +8,17 @@
     <DockPanel>
         <Border DockPanel.Dock="Top" Height="50" BorderBrush="Black" BorderThickness="2" Background="Gray">
             <DockPanel>
-                <Button Name="OpenFile" DockPanel.Dock="Left" Click="OnOpenFileButtonClick">
+                <Button Name="OpenFileButton" DockPanel.Dock="Left" Click="OnOpenFileButtonClick">
                     Open File
                 </Button>
-                <Button Name="SaveFile" DockPanel.Dock="Left" Click="OnSaveFileButtonClick">
+                <Button Name="SaveFileButton" DockPanel.Dock="Left" Click="OnSaveFileButtonClick">
                     Save File
+                </Button>
+                <Button Name="UndoButton" DockPanel.Dock="Left" Click="OnUndoButtonClick">
+                    Undo
+                </Button>
+                <Button Name="RedoButton" DockPanel.Dock="Left" Click="OnRedoButtonClick">
+                    Redo
                 </Button>
                 <TextBlock Margin="10" Name="ImageSize" DockPanel.Dock="Right" TextAlignment="Center" VerticalAlignment="Center">
                     
@@ -20,25 +26,23 @@
                 <TextBlock Margin="10" Name="Status" DockPanel.Dock="Bottom" TextAlignment="Center" VerticalAlignment="Center">
                     
                 </TextBlock>
-                <!--
-                <Button Name="OpenPalette" DockPanel.Dock="Left">
-                    Open Palette
-                </Button>
-                -->
                 <DockPanel>
                 </DockPanel>
             </DockPanel>
         </Border>
         <Border DockPanel.Dock="Left" Width="100" BorderBrush="Black" BorderThickness="2" Background="White">
             <DockPanel>
-                <Button Name="RestoreImage" DockPanel.Dock="Top" Height="50" Click="OnRestoreButtonClick">
+                <Button Name="RestoreButton" DockPanel.Dock="Top" Height="50" Click="OnRestoreButtonClick">
                     Restore
                 </Button>
-                <Button Name="Dither" DockPanel.Dock="Top" Height="50" Click="OnDitherButtonClick">
+                <Button Name="DitherButton" DockPanel.Dock="Top" Height="50" Click="OnDitherButtonClick">
                     Dither
                 </Button>
-                <Button Name="Palette" DockPanel.Dock="Top" Height="50" Click="OnPaletteButtonClick">
+                <Button Name="PaletteButton" DockPanel.Dock="Top" Height="50" Click="OnPaletteButtonClick">
                     Palette
+                </Button>
+                <Button Name="AdjustmentsButton" DockPanel.Dock="Top" Height="50" Click="OnAdjustmentsButtonClick">
+                    Adjustments
                 </Button>
                 <DockPanel>
                 </DockPanel>
