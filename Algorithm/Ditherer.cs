@@ -130,5 +130,44 @@ namespace PixelPalette.Algorithm {
             }
             return result.Bitmap;
         }
+
+        public static Bitmap DirectBinarySearch(Bitmap bitmap, Color[] colorPalette, float bias = 10) {
+            Color[] colors = BitmapConvert.ColorArrayFromBitmap(bitmap);
+            Random random = new Random();
+            DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
+            for (int x = 0; x < bitmap.Width; x++) {
+                for (int y = 0; y < bitmap.Height; y++) {
+                    Color pixel = colors[x+y*bitmap.Width];
+                    int highestDistance = 0;
+                    int lowestDistance = int.MaxValue;
+                    float distanceSum = 0;
+                    float[] distances = new float[colorPalette.Length];
+                    for (int i = 0; i < colorPalette.Length; i++) {
+                        int distance = (int) ColorHelpers.GetDistance(colorPalette[i], pixel);
+                        distances[i] = distance;
+                        if (highestDistance < distance) {
+                            highestDistance = distance;
+                        }
+                        if (lowestDistance > distance) {
+                            lowestDistance = distance;
+                        }
+                    }
+                    for (int i = 0; i < colorPalette.Length; i++) {
+                        distances[i] = MathF.Pow(lowestDistance+highestDistance-distances[i], bias);
+                        distanceSum += distances[i];
+                    }
+                    float choosen = (float) (random.NextDouble()*distanceSum);
+                    float currentRange = 0;
+                    for (int i = 0; i < distances.Length; i++) {
+                        currentRange += distances[i];
+                        if (currentRange > choosen) {
+                            result.SetPixel(x, y, colorPalette[i]);
+                            break;
+                        }
+                    }
+                }    
+            }
+            return result.Bitmap;
+        }
     }
 }

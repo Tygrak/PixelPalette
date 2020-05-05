@@ -18,6 +18,10 @@ namespace PixelPalette {
 
         private NumericUpDown resizeWidthNumeric;
         private NumericUpDown resizeHeightNumeric;
+        private NumericUpDown hueNumeric;
+        private NumericUpDown saturationNumeric;
+        private NumericUpDown lightnessNumeric;
+        private NumericUpDown blurSigmaNumeric;
 
         public bool Showing = false;
 
@@ -30,6 +34,10 @@ namespace PixelPalette {
             statusText = this.FindControl<TextBlock>("Status");
             resizeWidthNumeric = this.FindControl<NumericUpDown>("ResizeWidth");
             resizeHeightNumeric = this.FindControl<NumericUpDown>("ResizeHeight");
+            hueNumeric = this.FindControl<NumericUpDown>("Hue");
+            saturationNumeric = this.FindControl<NumericUpDown>("Saturation");
+            lightnessNumeric = this.FindControl<NumericUpDown>("Lightness");
+            blurSigmaNumeric = this.FindControl<NumericUpDown>("BlurSigma");
             Closing += (s, e) => {
                 Hide();
                 Showing = false;
@@ -84,6 +92,26 @@ namespace PixelPalette {
                 Bitmap bitmap = mainWindow.CurrentBitmap; 
                 await Task.Run(() => bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY));
                 mainWindow.ChangeMainImage(bitmap);
+                statusText.Text = "";
+            }
+        }
+
+        private async void OnShiftHslButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.CurrentBitmap != null) {
+                statusText.Text = "Adjusting image";
+                float hue = (float) hueNumeric.Value;
+                float saturation = (float) (saturationNumeric.Value/100);
+                float lightness = (float) (lightnessNumeric.Value/100);
+                mainWindow.ChangeMainImage(await Task.Run(() => ColorAdjustments.ShiftHsl(mainWindow.CurrentBitmap, hue, saturation, lightness)));
+                statusText.Text = "";
+            }
+        }
+
+        private async void OnBlurButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.CurrentBitmap != null) {
+                statusText.Text = "Bluring image";
+                float sigma = (float) blurSigmaNumeric.Value;
+                mainWindow.ChangeMainImage(await Task.Run(() => ColorAdjustments.BlurImage(mainWindow.CurrentBitmap, sigma)));
                 statusText.Text = "";
             }
         }

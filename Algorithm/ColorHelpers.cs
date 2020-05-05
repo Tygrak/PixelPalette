@@ -115,5 +115,9 @@ namespace PixelPalette.Algorithm {
             int b = int.Parse(""+hex[4]+hex[5], System.Globalization.NumberStyles.HexNumber);
             return Color.FromArgb(r, g, b);
         }
+
+        public static Color ClampRgbToColor(int r, int g, int b) {
+            return Color.FromArgb(Math.Max(0, Math.Min(255, r)), Math.Max(0, Math.Min(255, g)), Math.Max(0, Math.Min(255, b)));
+        }
     }
 }

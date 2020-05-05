@@ -162,10 +162,9 @@ namespace PixelPalette {
         }
 
         private void OnRestoreButtonClick(object sender, RoutedEventArgs eventArgs) {
-            if (CurrentBitmap != null) {
+            if (CurrentBitmap != null && InitialBitmap != CurrentBitmap) {
                 statusText.Text = "Restoring image";
-                CurrentBitmap = InitialBitmap; 
-                ReloadMainImage();
+                ChangeMainImage(InitialBitmap);
                 statusText.Text = "";
             }
         }

@@ -55,6 +55,40 @@
                     </DockPanel>
                 </StackPanel>
             </TabItem>
+            <TabItem Header="HSL shift" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Hue shift (° change):" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="Hue" Width="200" Value="0" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Saturation (% change):" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="Saturation" Width="200" Value="0" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Lightness (% change):" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="Lightness" Width="200" Value="0" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="ShiftHslButton" DockPanel.Dock="Right" Click="OnShiftHslButtonClick">
+                            Shift HSL
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
+            <TabItem Header="Blur" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Amount (σ):" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="BlurSigma" Width="200" Value="2" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="BlurButton" DockPanel.Dock="Right" Click="OnBlurButtonClick">
+                            Blur
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>
