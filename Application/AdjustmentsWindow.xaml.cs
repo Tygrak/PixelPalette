@@ -15,6 +15,7 @@ namespace PixelPalette {
     public class AdjustmentsWindow : Window {
         public MainWindow mainWindow;
         private TextBlock statusText;
+        private TextBlock compareErrorText;
 
         private NumericUpDown resizeWidthNumeric;
         private NumericUpDown resizeHeightNumeric;
@@ -32,6 +33,7 @@ namespace PixelPalette {
         private void InitializeComponent() {
             AvaloniaXamlLoader.Load(this);
             statusText = this.FindControl<TextBlock>("Status");
+            compareErrorText = this.FindControl<TextBlock>("CompareErrorResult");
             resizeWidthNumeric = this.FindControl<NumericUpDown>("ResizeWidth");
             resizeHeightNumeric = this.FindControl<NumericUpDown>("ResizeHeight");
             hueNumeric = this.FindControl<NumericUpDown>("Hue");
@@ -59,7 +61,7 @@ namespace PixelPalette {
         private async void OnRotateRightButtonClick(object sender, RoutedEventArgs eventArgs) {
             if (mainWindow.CurrentBitmap != null) {
                 statusText.Text = "Rotating image";
-                Bitmap bitmap = mainWindow.CurrentBitmap; 
+                Bitmap bitmap = new Bitmap(mainWindow.CurrentBitmap); 
                 await Task.Run(() => bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone));
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
@@ -69,7 +71,7 @@ namespace PixelPalette {
         private async void OnRotateLeftButtonClick(object sender, RoutedEventArgs eventArgs) {
             if (mainWindow.CurrentBitmap != null) {
                 statusText.Text = "Rotating image";
-                Bitmap bitmap = mainWindow.CurrentBitmap; 
+                Bitmap bitmap = new Bitmap(mainWindow.CurrentBitmap); 
                 await Task.Run(() => bitmap.RotateFlip(RotateFlipType.Rotate270FlipNone));
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
@@ -79,7 +81,7 @@ namespace PixelPalette {
         private async void OnFlipXButtonClick(object sender, RoutedEventArgs eventArgs) {
             if (mainWindow.CurrentBitmap != null) {
                 statusText.Text = "Flipping image";
-                Bitmap bitmap = mainWindow.CurrentBitmap; 
+                Bitmap bitmap = new Bitmap(mainWindow.CurrentBitmap); 
                 await Task.Run(() => bitmap.RotateFlip(RotateFlipType.RotateNoneFlipX));
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
@@ -89,7 +91,7 @@ namespace PixelPalette {
         private async void OnFlipYButtonClick(object sender, RoutedEventArgs eventArgs) {
             if (mainWindow.CurrentBitmap != null) {
                 statusText.Text = "Flipping image";
-                Bitmap bitmap = mainWindow.CurrentBitmap; 
+                Bitmap bitmap = new Bitmap(mainWindow.CurrentBitmap); 
                 await Task.Run(() => bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY));
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
@@ -112,6 +114,15 @@ namespace PixelPalette {
                 statusText.Text = "Bluring image";
                 float sigma = (float) blurSigmaNumeric.Value;
                 mainWindow.ChangeMainImage(await Task.Run(() => ColorAdjustments.BlurImage(mainWindow.CurrentBitmap, sigma)));
+                statusText.Text = "";
+            }
+        }
+
+        private async void OnCompareButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.CurrentBitmap != null) {
+                statusText.Text = "Comparing images";
+                double result = await Task.Run(() => ColorHelpers.CalculateAverageError(mainWindow.CurrentBitmap, mainWindow.InitialBitmap));
+                compareErrorText.Text = result.ToString();
                 statusText.Text = "";
             }
         }

@@ -89,6 +89,19 @@
                     </DockPanel>
                 </StackPanel>
             </TabItem>
+            <TabItem Header="Compare" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="CompareButton" DockPanel.Dock="Right" Click="OnCompareButtonClick">
+                            Calculate Error
+                        </Button>
+                        <DockPanel LastChildFill="false" Margin="10">
+                            <TextBlock DockPanel.Dock="Left" Text="Result average error:" VerticalAlignment="Center"/>
+                            <TextBlock DockPanel.Dock="Right" Name="CompareErrorResult" Text="" VerticalAlignment="Center"/>
+                        </DockPanel>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
         </TabControl>
     </DockPanel>
 </Window>

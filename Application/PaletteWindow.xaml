@@ -78,6 +78,19 @@
                     </DockPanel>
                 </StackPanel>
             </TabItem>
+            <TabItem Header="HML" VerticalContentAlignment="Center">
+                <StackPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Result color amount:" VerticalAlignment="Center"/>
+                        <NumericUpDown DockPanel.Dock="Right" Name="HmlColorAmount" Width="200" Value="8" Minimum="2" />
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="HmlButton" DockPanel.Dock="Right" Click="OnHmlButtonClick">
+                            Generate Sectors High Mid Low Palette
+                        </Button>
+                    </DockPanel>
+                </StackPanel>
+            </TabItem>
             <TabItem Header="Duo Tone" VerticalContentAlignment="Center">
                 <StackPanel>
                     <DockPanel LastChildFill="false" Margin="10">

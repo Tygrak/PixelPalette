@@ -116,9 +116,6 @@ namespace PixelPalette.Algorithm {
                     means[i] = sorted[i*(sorted.Count/count) + (sorted.Count/count)/2];
                 }
             }
-            /*for (int i = 0; i < count; i++) {
-                means[i] = colors[i*(colors.Length/count) + (colors.Length/count)/2];
-            }*/
             bool changed = false;
             for (int step = 0; step < maxSteps; step++) {
                 for (int i = 0; i < colors.Length; i++) {
@@ -144,6 +141,41 @@ namespace PixelPalette.Algorithm {
                 }
             }
             return means.ToList();
+        }
+        
+        public static List<Color> SectorsHighMidLow(Bitmap bitmap, int count) {
+            List<Color> result = new List<Color>(count);
+            List<Color> colors = BitmapConvert.ColorArrayFromBitmap(bitmap).ToList();
+            int sectors = count*3;
+            for (int i = 0; i < sectors; i++) {
+                List<Color> range = colors.GetRange((colors.Count/sectors)*i, colors.Count/sectors);
+                range.Sort((a, b) => a.GetBrightness().CompareTo(b.GetBrightness()));
+                result.Add(ColorHelpers.AverageColors(range.GetRange(0, range.Count/3)));
+                result.Add(ColorHelpers.AverageColors(range.GetRange(range.Count/3, range.Count/3)));
+                result.Add(ColorHelpers.AverageColors(range.GetRange((range.Count*2)/3, range.Count/3)));
+            }
+            while (result.Count > count) {
+                int worstColorId = 0;
+                float minMinDistance = int.MaxValue;
+                for (int i = 0; i < result.Count; i++) {
+                    float minDistance = int.MaxValue;
+                    for (int j = 0; j < result.Count; j++) {
+                        if (i == j) {
+                            continue;
+                        }
+                        float distance = ColorHelpers.GetDistance(result[i], result[j]);
+                        if (distance < minDistance) {
+                            minDistance = distance;
+                        }
+                    }
+                    if (minDistance < minMinDistance) {
+                        worstColorId = i;
+                        minMinDistance = minDistance;
+                    }
+                }
+                result.RemoveAt(worstColorId);
+            }
+            return result;
         }
 
         public static List<Color> FakeDuoTone(int count, float hue, float saturation) {

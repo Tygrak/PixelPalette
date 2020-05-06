@@ -20,6 +20,7 @@ namespace PixelPalette {
         private NumericUpDown medianCutAmountNumeric;
         private NumericUpDown kMeansAmountNumeric;
         private NumericUpDown kMeansStepsNumeric;
+        private NumericUpDown hmlNumeric;
         private NumericUpDown duoToneAmountNumeric;
         private NumericUpDown duoToneHueNumeric;
         private NumericUpDown duoToneSaturationNumeric;
@@ -52,6 +53,7 @@ namespace PixelPalette {
             medianCutAmountNumeric = this.FindControl<NumericUpDown>("MedianCutColorAmount");
             kMeansAmountNumeric = this.FindControl<NumericUpDown>("KMeansColorAmount");
             kMeansStepsNumeric = this.FindControl<NumericUpDown>("KMeansStepAmount");
+            hmlNumeric = this.FindControl<NumericUpDown>("HmlColorAmount");
             duoToneAmountNumeric = this.FindControl<NumericUpDown>("DuoToneColorAmount");
             duoToneHueNumeric = this.FindControl<NumericUpDown>("DuoToneHue");
             duoToneSaturationNumeric = this.FindControl<NumericUpDown>("DuoToneSaturation");
@@ -94,6 +96,16 @@ namespace PixelPalette {
                 int amount = (int) kMeansAmountNumeric.Value;
                 int steps = (int) kMeansStepsNumeric.Value;
                 ColorPalette = await Task.Run(() => PaletteGeneration.KMeans(mainWindow.CurrentBitmap, amount, steps));
+                ReloadPaletteItems();
+                statusText.Text = "";
+            }
+        }
+
+        private async void OnHmlButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.CurrentBitmap != null) {
+                statusText.Text = "Generating Palette";
+                int amount = (int) hmlNumeric.Value;
+                ColorPalette = await Task.Run(() => PaletteGeneration.SectorsHighMidLow(mainWindow.CurrentBitmap, amount));
                 ReloadPaletteItems();
                 statusText.Text = "";
             }

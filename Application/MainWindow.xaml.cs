@@ -57,7 +57,7 @@ namespace PixelPalette {
             redoButton.IsEnabled = false;
         }
 
-        private async Task<string> GetOpenImagePath() {
+        public async Task<string> GetOpenImagePath() {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.AllowMultiple = false;
             openFileDialog.Filters.Add(new FileDialogFilter() { Name = "Image", Extensions =  { "png", "jpg", "jpeg", "bmp" } });
@@ -68,7 +68,7 @@ namespace PixelPalette {
             return result[0];
         }
 
-        private async Task<string> GetSaveImagePath() {
+        public async Task<string> GetSaveImagePath() {
             SaveFileDialog saveFileDialog = new SaveFileDialog();
             saveFileDialog.DefaultExtension = "png";
             saveFileDialog.Filters.Add(new FileDialogFilter() { Name = "Image", Extensions =  { "png", "jpg", "jpeg", "bmp" } });
@@ -149,6 +149,9 @@ namespace PixelPalette {
             }
             string path = await GetSaveImagePath();
             if (path != null && path != "") {
+                if (!path.Contains(".")) {
+                    path += ".png";
+                }
                 CurrentBitmap.Save(path);
             }
         }

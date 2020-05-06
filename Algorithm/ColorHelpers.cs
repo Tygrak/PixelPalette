@@ -119,5 +119,15 @@ namespace PixelPalette.Algorithm {
         public static Color ClampRgbToColor(int r, int g, int b) {
             return Color.FromArgb(Math.Max(0, Math.Min(255, r)), Math.Max(0, Math.Min(255, g)), Math.Max(0, Math.Min(255, b)));
         }
+
+        public static double CalculateAverageError(Bitmap a, Bitmap b) {
+            Color[] aColors = BitmapConvert.ColorArrayFromBitmap(a);
+            Color[] bColors = BitmapConvert.ColorArrayFromBitmap(b);
+            double error = 0;
+            for (int i = 0; i < aColors.Length; i++) {
+                error += GetDistance(aColors[i], bColors[i]);
+            }
+            return error/aColors.Length;
+        }
     }
 }

@@ -12,6 +12,7 @@ namespace PixelPalette.Algorithm {
                 for (int y = 0; y < bitmap.Height; y++) {
                     Color pixel = colors[x+y*bitmap.Width];
                     result.SetPixel(x, y, ColorHelpers.GetMinDistance(pixel, colorPalette));
+                    //result.SetPixel(x, y, pixel);
                 }    
             }
             return result.Bitmap;
