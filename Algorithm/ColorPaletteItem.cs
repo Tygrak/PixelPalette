@@ -16,7 +16,7 @@ namespace PixelPalette.Algorithm {
         public Color color;
         public string Hex {
             get {
-                return ColorHelpers.ColorToHex(color);
+                return ColorConvertors.ColorToHex(color);
             }
         }
         public AvaloniaBrush Brush {

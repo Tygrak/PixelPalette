@@ -16,6 +16,7 @@ namespace PixelPalette {
         public MainWindow mainWindow;
         private TextBlock statusText;
         private TextBlock compareErrorText;
+        private TextBlock compareBrightnessErrorText;
 
         private NumericUpDown resizeWidthNumeric;
         private NumericUpDown resizeHeightNumeric;
@@ -34,6 +35,7 @@ namespace PixelPalette {
             AvaloniaXamlLoader.Load(this);
             statusText = this.FindControl<TextBlock>("Status");
             compareErrorText = this.FindControl<TextBlock>("CompareErrorResult");
+            compareBrightnessErrorText = this.FindControl<TextBlock>("CompareBrightnessResult");
             resizeWidthNumeric = this.FindControl<NumericUpDown>("ResizeWidth");
             resizeHeightNumeric = this.FindControl<NumericUpDown>("ResizeHeight");
             hueNumeric = this.FindControl<NumericUpDown>("Hue");
@@ -118,12 +120,27 @@ namespace PixelPalette {
             }
         }
 
-        private async void OnCompareButtonClick(object sender, RoutedEventArgs eventArgs) {
-            if (mainWindow.CurrentBitmap != null) {
+        private async void CompareImages(Bitmap a, Bitmap b) {
+            if (a != null && b != null && a.Size == b.Size) {
                 statusText.Text = "Comparing images";
-                double result = await Task.Run(() => ColorHelpers.CalculateAverageError(mainWindow.CurrentBitmap, mainWindow.InitialBitmap));
-                compareErrorText.Text = result.ToString();
+                double error = await Task.Run(() => ColorHelpers.CalculateAverageError(a, b));
+                compareErrorText.Text = error.ToString();
+                double brightnessError = await Task.Run(() => ColorHelpers.CalculateAverageBrightnessError(a, b));
+                compareBrightnessErrorText.Text = (brightnessError*100).ToString("0.00000")+"%";
                 statusText.Text = "";
+            }
+        }
+
+        private void OnCompareButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.CurrentBitmap != null) {
+                CompareImages(mainWindow.CurrentBitmap, mainWindow.InitialBitmap);
+            }
+        }
+
+        private async void OnCompareOpenButtonClick(object sender, RoutedEventArgs eventArgs) {
+            string path = await mainWindow.GetOpenImagePath();
+            if (mainWindow.CurrentBitmap != null && path != null && path != "") {
+                CompareImages(mainWindow.CurrentBitmap, new Bitmap(path));
             }
         }
 

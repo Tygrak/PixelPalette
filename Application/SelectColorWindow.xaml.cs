@@ -68,11 +68,11 @@ namespace PixelPalette {
             int g = (int) colorGNumeric.Value;
             int b = (int) colorBNumeric.Value;
             CurrentColor = Color.FromArgb(r, g, b);
-            var hsl = ColorHelpers.ColorToHsl(CurrentColor);
+            var hsl = ColorConvertors.ColorToHsl(CurrentColor);
             colorHNumeric.Value = hsl.H;
             colorSNumeric.Value = hsl.S;
             colorLNumeric.Value = hsl.L;
-            colorHexTextBox.Text = ColorHelpers.ColorToHex(CurrentColor);
+            colorHexTextBox.Text = ColorConvertors.ColorToHex(CurrentColor);
             ReloadColorMain();
         }
 
@@ -84,11 +84,11 @@ namespace PixelPalette {
             float h = (float) (colorHNumeric.Value%360);
             float s = (float) colorSNumeric.Value;
             float l = (float) colorLNumeric.Value;
-            CurrentColor = ColorHelpers.HslToColor(h, s, l);
+            CurrentColor = ColorConvertors.HslToColor(h, s, l);
             colorRNumeric.Value = CurrentColor.R;
             colorGNumeric.Value = CurrentColor.G;
             colorBNumeric.Value = CurrentColor.B;
-            colorHexTextBox.Text = ColorHelpers.ColorToHex(CurrentColor);
+            colorHexTextBox.Text = ColorConvertors.ColorToHex(CurrentColor);
             ReloadColorMain();
         }
 
@@ -97,11 +97,11 @@ namespace PixelPalette {
                 return;
             }
             colorChanged = true;
-            CurrentColor = ColorHelpers.HexToColor(colorHexTextBox.Text);
+            CurrentColor = ColorConvertors.HexToColor(colorHexTextBox.Text);
             colorRNumeric.Value = CurrentColor.R;
             colorGNumeric.Value = CurrentColor.G;
             colorBNumeric.Value = CurrentColor.B;
-            var hsl = ColorHelpers.ColorToHsl(CurrentColor);
+            var hsl = ColorConvertors.ColorToHsl(CurrentColor);
             colorHNumeric.Value = hsl.H;
             colorSNumeric.Value = hsl.S;
             colorLNumeric.Value = hsl.L;

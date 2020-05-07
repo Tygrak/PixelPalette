@@ -149,7 +149,7 @@ namespace PixelPalette {
         private async void OnDuoTonePickColorButtonClick(object sender, RoutedEventArgs eventArgs) {
             SelectColorWindow dialog = new SelectColorWindow();
             Color result = await dialog.ShowDialog<Color>(this);
-            var hslColor = ColorHelpers.ColorToHsl(result);
+            var hslColor = ColorConvertors.ColorToHsl(result);
             duoToneHueNumeric.Value = hslColor.H;
             duoToneSaturationNumeric.Value = hslColor.S;
         }
@@ -174,7 +174,7 @@ namespace PixelPalette {
             }
             string colors = File.ReadAllText(path[0]);
             ColorPalette = colors.Split(importExportSeparator).Where(s => !string.IsNullOrWhiteSpace(s))
-                                 .Select(s => ColorHelpers.HexToColor(s)).Distinct().ToList();
+                                 .Select(s => ColorConvertors.HexToColor(s)).Distinct().ToList();
             ReloadPaletteItems();
         }
 
@@ -187,7 +187,7 @@ namespace PixelPalette {
                 return;
             }
             path = path.Contains('.') ? path : path+".palette";
-            string result = string.Join(importExportSeparator, ColorPalette.Select(c => ColorHelpers.ColorToHex(c)));
+            string result = string.Join(importExportSeparator, ColorPalette.Select(c => ColorConvertors.ColorToHex(c)));
             File.WriteAllText(path, result);
         }
     }

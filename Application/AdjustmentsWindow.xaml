@@ -92,13 +92,22 @@
             <TabItem Header="Compare" VerticalContentAlignment="Center">
                 <StackPanel>
                     <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Result average distance error:" VerticalAlignment="Center"/>
+                        <TextBlock DockPanel.Dock="Right" Name="CompareErrorResult" Text="" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <TextBlock DockPanel.Dock="Left" Text="Result average brightness error:" VerticalAlignment="Center"/>
+                        <TextBlock DockPanel.Dock="Right" Name="CompareBrightnessResult" Text="" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
                         <Button Name="CompareButton" DockPanel.Dock="Right" Click="OnCompareButtonClick">
-                            Calculate Error
+                            Compare With Initial Image
                         </Button>
-                        <DockPanel LastChildFill="false" Margin="10">
-                            <TextBlock DockPanel.Dock="Left" Text="Result average error:" VerticalAlignment="Center"/>
-                            <TextBlock DockPanel.Dock="Right" Name="CompareErrorResult" Text="" VerticalAlignment="Center"/>
-                        </DockPanel>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="CompareOpenButton" DockPanel.Dock="Right" Click="OnCompareOpenButtonClick">
+                            Compare With Image From File
+                        </Button>
                     </DockPanel>
                 </StackPanel>
             </TabItem>

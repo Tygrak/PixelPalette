@@ -10,11 +10,11 @@ namespace PixelPalette.Algorithm {
             DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
             for (int x = 0; x < bitmap.Width; x++) {
                 for (int y = 0; y < bitmap.Height; y++) {
-                    var hsl = ColorHelpers.ColorToHsl(colors[x+y*bitmap.Width]);
+                    var hsl = ColorConvertors.ColorToHsl(colors[x+y*bitmap.Width]);
                     hsl.H = MathF.Max(hsl.H+hueShift, 0)%360;
                     hsl.S = MathF.Min(MathF.Max((hsl.S)*(1+saturation), 0), 1);
                     hsl.L = MathF.Min(MathF.Max((hsl.L)*(1+lightness), 0), 1);
-                    result.SetPixel(x, y, ColorHelpers.HslToColor(hsl));
+                    result.SetPixel(x, y, ColorConvertors.HslToColor(hsl));
                 }    
             }
             return result.Bitmap;
@@ -40,7 +40,7 @@ namespace PixelPalette.Algorithm {
                         g += colors[i+y*bitmap.Width].G*blurMatrix[Math.Abs(x-i)];
                         b += colors[i+y*bitmap.Width].B*blurMatrix[Math.Abs(x-i)];
                     }
-                    colors2[x+y*bitmap.Width] = ColorHelpers.ClampRgbToColor((int) r, (int) g, (int) b);
+                    colors2[x+y*bitmap.Width] = ColorConvertors.ClampRgbToColor((int) r, (int) g, (int) b);
                 }    
             }
             for (int x = 0; x < bitmap.Width; x++) {
@@ -53,7 +53,7 @@ namespace PixelPalette.Algorithm {
                         g += colors2[x+j*bitmap.Width].G*blurMatrix[Math.Abs(y-j)];
                         b += colors2[x+j*bitmap.Width].B*blurMatrix[Math.Abs(y-j)];
                     }
-                    result.SetPixel(x, y, ColorHelpers.ClampRgbToColor((int) r, (int) g, (int) b));
+                    result.SetPixel(x, y, ColorConvertors.ClampRgbToColor((int) r, (int) g, (int) b));
                 }    
             }
             return result.Bitmap;
