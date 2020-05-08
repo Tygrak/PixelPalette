@@ -1,6 +1,8 @@
 using System;
 using System.Drawing;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Linq;
 
 namespace PixelPalette.Algorithm {
@@ -48,11 +50,11 @@ namespace PixelPalette.Algorithm {
             List<List<Color>> colors = new List<List<Color>>(){BitmapConvert.ColorArrayFromBitmap(bitmap).ToList()};
             while (colors.Count*2 <= count) {
                 List<List<Color>> nextColors = new List<List<Color>>(); 
-                foreach (var pixels in colors) {
+                Parallel.ForEach(colors, pixels => {
                     var splitted = SplitColors(pixels);
                     nextColors.Add(splitted.Item1);
                     nextColors.Add(splitted.Item2);
-                }
+                });
                 colors = nextColors;
             }
             while (colors.Count < count) {
@@ -74,11 +76,11 @@ namespace PixelPalette.Algorithm {
             List<List<Color>> colors = new List<List<Color>>(){BitmapConvert.ColorArrayFromBitmap(bitmap).ToList()};
             while (colors.Count*2 <= count) {
                 List<List<Color>> nextColors = new List<List<Color>>(); 
-                foreach (var pixels in colors) {
-                    var splitted = PaletteGeneration.SplitColors(pixels);
+                Parallel.ForEach(colors, pixels => {
+                    var splitted = SplitColors(pixels);
                     nextColors.Add(splitted.Item1);
                     nextColors.Add(splitted.Item2);
-                }
+                });
                 colors = nextColors;
             }
             while (colors.Count < count) {
@@ -92,7 +94,7 @@ namespace PixelPalette.Algorithm {
             {
                 resColors.AddRange(pixels);
             }
-            for (int x = 0; x < bitmap.Width; x++) {
+            Parallel.For(0, bitmap.Width, x => {
                 for (int y = 0; y < bitmap.Height; y++) {
                     if (y > 0 && y%(bitmap.Height/count) == 0) {
                         result.SetPixel(x, y, Color.Black);
@@ -100,7 +102,7 @@ namespace PixelPalette.Algorithm {
                         result.SetPixel(x, y, resColors[x+y*bitmap.Width]);
                     }
                 }    
-            }
+            });
             return result.Bitmap;
         }
 
@@ -118,13 +120,13 @@ namespace PixelPalette.Algorithm {
             }
             bool changed = false;
             for (int step = 0; step < maxSteps; step++) {
-                for (int i = 0; i < colors.Length; i++) {
+                Parallel.For(0, colors.Length, i => {
                     int newCluster = ColorHelpers.GetMinDistanceIndex(colors[i], means);
                     if (newCluster != clusters[i]) {
                         changed = true;
                         clusters[i] = newCluster;
                     }
-                }
+                });
                 if (!changed) {
                     break;
                 }
@@ -147,13 +149,13 @@ namespace PixelPalette.Algorithm {
             List<Color> candidates = new List<Color>(count);
             List<Color> colors = BitmapConvert.ColorArrayFromBitmap(bitmap).ToList();
             int sectors = count*3;
-            for (int i = 0; i < sectors; i++) {
+            Parallel.For(0, sectors, i => {
                 List<Color> range = colors.GetRange((colors.Count/sectors)*i, colors.Count/sectors);
                 range.Sort((a, b) => a.GetBrightness().CompareTo(b.GetBrightness()));
                 candidates.Add(ColorHelpers.AverageColors(range.GetRange(0, range.Count/3)));
                 candidates.Add(ColorHelpers.AverageColors(range.GetRange(range.Count/3, range.Count/3)));
                 candidates.Add(ColorHelpers.AverageColors(range.GetRange((range.Count*2)/3, range.Count/3)));
-            }
+            });
             List<Color> result = new List<Color>(count);
             candidates.Sort((a, b) => a.GetBrightness().CompareTo(b.GetBrightness()));
             result.Add(candidates[0]);
