@@ -3,6 +3,62 @@
              x:Class="PixelPalette.App">
     <Application.Styles>
         <StyleInclude Source="avares://Avalonia.Themes.Default/DefaultTheme.xaml"/>
-        <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseLight.xaml"/>
+        <StyleInclude Source="avares://Avalonia.Themes.Default/Accents/BaseDark.xaml"/>
+        <Style Selector="TabControl">
+            <Setter Property="Background" Value="#323433"/>
+            <Setter Property="Foreground" Value="#c5cccc"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="TabControl WrapPanel">
+            <Setter Property="Background" Value="#191a1a"/>
+        </Style>
+        <Style Selector="TabItem:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#4a4f4e"/>
+        </Style>
+        <Style Selector="TabItem:selected">
+            <Setter Property="Foreground" Value="#c5cccc"/>
+            <Setter Property="Margin" Value="0 0 0 0"/>
+            <Setter Property="Padding" Value="10 0"/>
+        </Style>
+        <Style Selector="TabItem:selected /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#323433"/>
+        </Style>
+        <Style Selector="DockPanel.DialogWindow">
+            <Setter Property="Background" Value="#323433"/>
+        </Style>
+        <Style Selector="DockPanel.DialogWindow TextBlock">
+            <Setter Property="Foreground" Value="#c5cccc"/>
+        </Style> 
+        <Style Selector="ListBox">
+            <Setter Property="Background" Value="#626a68"/>
+            <Setter Property="Foreground" Value="#c5cccc"/>
+            <Setter Property="BorderBrush" Value="#191a1a"/>
+        </Style>
+        <Style Selector="ListBoxItem:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#525856"/>
+        </Style>
+        <Style Selector="ListBoxItem:selected /template/ ContentPresenter">
+            <Setter Property="Background" Value="#4a4f4e"/>
+        </Style>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="#c5cccc"/>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#626a68"/>
+            <Setter Property="Foreground" Value="#c5cccc"/>
+            <Setter Property="BorderBrush" Value="#191a1a"/>
+        </Style>
+        <Style Selector="NumericUpDown">
+            <Setter Property="Background" Value="#626a68"/>
+            <Setter Property="Foreground" Value="#c5cccc"/>
+            <Setter Property="BorderBrush" Value="#191a1a"/>
+        </Style>
+
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#4a4f4e"/>
+            <Setter Property="Foreground" Value="#c5cccc"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="2 0 2 0"/>
+        </Style>
     </Application.Styles>
 </Application>

@@ -7,8 +7,8 @@
         Title="Palette - PixelPalette"
         Width="600"
         Height="600">
-  <DockPanel>
-        <DockPanel DockPanel.Dock="Bottom" Margin="10">
+  <DockPanel Classes="DialogWindow">
+        <DockPanel DockPanel.Dock="Bottom" Margin="10" Classes="OkBar">
             <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">
                 Close
             </Button>
@@ -37,7 +37,8 @@
                             <DataTemplate>
                                 <DockPanel LastChildFill="false">
                                     <TextBlock DockPanel.Dock="Left" Text="{Binding Hex}" VerticalAlignment="Center"/>
-                                    <Border DockPanel.Dock="Right" BorderBrush="Black" BorderThickness="2" Background="{Binding Brush}" CornerRadius="4" Padding="4" Width="50" Height="20" Margin="8">
+                                    <Border DockPanel.Dock="Right" BorderBrush="Black" BorderThickness="2" Background="{Binding Brush}" 
+                                            CornerRadius="4" Padding="4" Width="50" Height="20" Margin="8">
                                     </Border>
                                 </DockPanel>
                             </DataTemplate>

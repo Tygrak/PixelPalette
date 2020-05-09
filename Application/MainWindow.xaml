@@ -5,9 +5,23 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PixelPalette.MainWindow"
         Title="PixelPalette">
+    <Window.Styles>
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#323433"/>
+            <Setter Property="BorderThickness" Value="2 0 0 0"/>
+            <Setter Property="Margin" Value="0 0 0 0"/>
+        </Style>
+    </Window.Styles>
     <DockPanel>
-        <Border DockPanel.Dock="Top" Height="50" BorderBrush="Black" BorderThickness="2" Background="Gray">
+        <Border DockPanel.Dock="Top" Height="50" BorderBrush="Black" BorderThickness="2" Background="#191a1a">
             <DockPanel>
+                <DockPanel.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="BorderThickness" Value="0 0 0 0"/>
+                        <Setter Property="Background" Value="#1d2027"/>
+                        <Setter Property="Foreground" Value="#c5cccc"/>
+                    </Style>
+                </DockPanel.Styles>
                 <Button Name="OpenFileButton" DockPanel.Dock="Left" Click="OnOpenFileButtonClick">
                     Open File
                 </Button>
@@ -30,7 +44,7 @@
                 </DockPanel>
             </DockPanel>
         </Border>
-        <Border DockPanel.Dock="Left" Width="100" BorderBrush="Black" BorderThickness="2" Background="White">
+        <Border DockPanel.Dock="Left" Width="100" BorderBrush="Black" BorderThickness="2" Background="#323433">
             <DockPanel>
                 <Button Name="RestoreButton" DockPanel.Dock="Top" Height="50" Click="OnRestoreButtonClick">
                     Restore
@@ -48,7 +62,9 @@
                 </DockPanel>
             </DockPanel>
         </Border>
-        <Image Name="MainImage">
-        </Image>
+        <Border Background="#626a68">
+            <Image Name="MainImage">
+            </Image>
+        </Border>
     </DockPanel>
 </Window>

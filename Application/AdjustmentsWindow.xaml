@@ -7,8 +7,8 @@
         Title="Adjustments - PixelPalette"
         Width="600"
         Height="600">
-  <DockPanel>
-        <DockPanel DockPanel.Dock="Bottom" Margin="10">
+  <DockPanel Classes="DialogWindow">
+        <DockPanel DockPanel.Dock="Bottom" Margin="10" Classes="OkBar">
             <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">
                 Close
             </Button>
