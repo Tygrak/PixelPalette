@@ -9,6 +9,7 @@ using System.Drawing;
 using Avalonia.Interactivity;
 using Avalonia.Input;
 using System.Threading.Tasks;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,7 @@ namespace PixelPalette {
         private AvaloniaImage mainImage;
         private TextBlock imageSizeText;
         private TextBlock statusText;
+        private Border imageBorder;
 
         private Button undoButton;
         private Button redoButton;
@@ -34,7 +36,7 @@ namespace PixelPalette {
 
         public List<Color> ColorPalette {get {return paletteWindow.ColorPalette;}}
 
-        public App app;
+        public bool Working {get; set;} = false;
 
         public MainWindow() {
             InitializeComponent();
@@ -49,6 +51,7 @@ namespace PixelPalette {
         private void InitializeComponent() {
             AvaloniaXamlLoader.Load(this);
             mainImage = this.FindControl<AvaloniaImage>("MainImage");
+            imageBorder = this.FindControl<Border>("ImageBorder");
             imageSizeText = this.FindControl<TextBlock>("ImageSize");
             statusText = this.FindControl<TextBlock>("Status");
             undoButton = this.FindControl<Button>("UndoButton");
@@ -127,10 +130,22 @@ namespace PixelPalette {
 
         private void ReloadMainImage() {
             mainImage.Source = BitmapConvert.ConvertToAvaloniaBitmap(CurrentBitmap);
+            UpdateMainImageStretch();
             imageSizeText.Text = $"{CurrentBitmap.Size.Width}x{CurrentBitmap.Size.Height}";
         }
 
+        private void UpdateMainImageStretch() {
+            if (CurrentBitmap.Width > imageBorder.Bounds.Width || CurrentBitmap.Height > imageBorder.Bounds.Height) {
+                mainImage.Stretch = Avalonia.Media.Stretch.Uniform;
+            } else {
+                mainImage.Stretch = Avalonia.Media.Stretch.None;
+            }
+        }
+
         private async void OnOpenFileButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (Working) {
+                return;
+            }
             string path = await GetOpenImagePath();
             if (path != null && path != "") {
                 InitialBitmap = new Bitmap(path);
@@ -144,7 +159,7 @@ namespace PixelPalette {
         }
 
         private async void OnSaveFileButtonClick(object sender, RoutedEventArgs eventArgs) {
-            if (CurrentBitmap == null) {
+            if (CurrentBitmap == null || Working) {
                 return;
             }
             string path = await GetSaveImagePath();
@@ -157,18 +172,29 @@ namespace PixelPalette {
         }
 
         private void OnUndoButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (Working) {
+                return;
+            }
             UndoImage();
         }
 
         private void OnRedoButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (Working) {
+                return;
+            }
             RedoImage();
         }
 
         private void OnRestoreButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (Working) {
+                return;
+            }
             if (CurrentBitmap != null && InitialBitmap != CurrentBitmap) {
+                Working = true;
                 statusText.Text = "Restoring image";
                 ChangeMainImage(InitialBitmap);
                 statusText.Text = "";
+                Working = false;
             }
         }
 
@@ -177,7 +203,7 @@ namespace PixelPalette {
                 return;
             }
             ditherWindow.Showing = true;
-            ditherWindow.ShowDialog(this);
+            ditherWindow.Show();
         }
 
         private void OnPaletteButtonClick(object sender, RoutedEventArgs eventArgs) {
@@ -185,7 +211,7 @@ namespace PixelPalette {
                 return;
             }
             paletteWindow.Showing = true;
-            paletteWindow.ShowDialog(this);
+            paletteWindow.Show();
         }
 
         private void OnAdjustmentsButtonClick(object sender, RoutedEventArgs eventArgs) {
@@ -193,7 +219,7 @@ namespace PixelPalette {
                 return;
             }
             adjustmentsWindow.Showing = true;
-            adjustmentsWindow.ShowDialog(this);
+            adjustmentsWindow.Show();
         }
     }
 }

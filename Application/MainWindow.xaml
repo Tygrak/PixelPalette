@@ -4,7 +4,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="PixelPalette.MainWindow"
-        Title="PixelPalette">
+        Title="PixelPalette"
+        Icon="/Assets/palette.png">
     <Window.Styles>
         <Style Selector="Button">
             <Setter Property="Background" Value="#323433"/>
@@ -62,8 +63,8 @@
                 </DockPanel>
             </DockPanel>
         </Border>
-        <Border Background="#626a68">
-            <Image Name="MainImage">
+        <Border Background="#626a68" Name="ImageBorder">
+            <Image Name="MainImage" Source="/Assets/blank.png">
             </Image>
         </Border>
     </DockPanel>

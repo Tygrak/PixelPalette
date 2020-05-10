@@ -6,7 +6,8 @@
         x:Class="PixelPalette.PaletteWindow"
         Title="Palette - PixelPalette"
         Width="600"
-        Height="600">
+        Height="600"
+        Icon="/Assets/palette.png">
   <DockPanel Classes="DialogWindow">
         <DockPanel DockPanel.Dock="Bottom" Margin="10" Classes="OkBar">
             <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">
@@ -114,6 +115,11 @@
                     <DockPanel LastChildFill="false" Margin="10">
                         <Button Name="DuoToneButton" DockPanel.Dock="Right" Click="OnDuoToneButtonClick">
                             Generate Duo Tone Palette
+                        </Button>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
+                        <Button Name="DuoToneAddButton" DockPanel.Dock="Right" Click="OnDuoToneAddButtonClick">
+                            Add Duo Tone To Current Palette
                         </Button>
                     </DockPanel>
                 </StackPanel>

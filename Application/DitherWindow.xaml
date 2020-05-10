@@ -6,7 +6,8 @@
         x:Class="PixelPalette.DitherWindow"
         Title="Dither - PixelPalette"
         Width="600"
-        Height="400">
+        Height="400"
+        Icon="/Assets/palette.png">
   <DockPanel Classes="DialogWindow">
         <DockPanel DockPanel.Dock="Bottom" Margin="10" Classes="OkBar">
             <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">

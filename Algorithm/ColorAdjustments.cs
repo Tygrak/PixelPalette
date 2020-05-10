@@ -32,39 +32,41 @@ namespace PixelPalette.Algorithm {
             Color[] colors = BitmapConvert.ColorArrayFromBitmap(bitmap);
             Color[] colors2 = new Color[colors.Length];
             DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
+            int width = bitmap.Width;
+            int height = bitmap.Height;
             Parallel.For(0, bitmap.Width, x => {
-                for (int y = 0; y < bitmap.Height; y++) {
+                for (int y = 0; y < height; y++) {
                     float r = 0;
                     float g = 0;
                     float b = 0;
                     for (int i = x-range+1; i < x+range; i++) {
-                        if (i < 0 || i >= bitmap.Width) {
-                            r += colors[x+y*bitmap.Width].R*blurMatrix[Math.Abs(x-i)];
-                            g += colors[x+y*bitmap.Width].G*blurMatrix[Math.Abs(x-i)];
-                            b += colors[x+y*bitmap.Width].B*blurMatrix[Math.Abs(x-i)];
+                        if (i < 0 || i >= width) {
+                            r += colors[x+y*width].R*blurMatrix[Math.Abs(x-i)];
+                            g += colors[x+y*width].G*blurMatrix[Math.Abs(x-i)];
+                            b += colors[x+y*width].B*blurMatrix[Math.Abs(x-i)];
                         } else {
-                            r += colors[i+y*bitmap.Width].R*blurMatrix[Math.Abs(x-i)];
-                            g += colors[i+y*bitmap.Width].G*blurMatrix[Math.Abs(x-i)];
-                            b += colors[i+y*bitmap.Width].B*blurMatrix[Math.Abs(x-i)];
+                            r += colors[i+y*width].R*blurMatrix[Math.Abs(x-i)];
+                            g += colors[i+y*width].G*blurMatrix[Math.Abs(x-i)];
+                            b += colors[i+y*width].B*blurMatrix[Math.Abs(x-i)];
                         }
                     }
-                    colors2[x+y*bitmap.Width] = ColorConvertors.ClampRgbToColor((int) r, (int) g, (int) b);
+                    colors2[x+y*width] = ColorConvertors.ClampRgbToColor((int) r, (int) g, (int) b);
                 }    
             });
             Parallel.For(0, bitmap.Height, y => {
-                for (int x = 0; x < bitmap.Width; x++) {
+                for (int x = 0; x < width; x++) {
                     float r = 0;
                     float g = 0;
                     float b = 0;
                     for (int j = y-range+1; j < y+range; j++) {
-                        if (j < 0 || j >= bitmap.Height) {
-                            r += colors[x+y*bitmap.Width].R*blurMatrix[Math.Abs(y-j)];
-                            g += colors[x+y*bitmap.Width].G*blurMatrix[Math.Abs(y-j)];
-                            b += colors[x+y*bitmap.Width].B*blurMatrix[Math.Abs(y-j)];
+                        if (j < 0 || j >= height) {
+                            r += colors[x+y*width].R*blurMatrix[Math.Abs(y-j)];
+                            g += colors[x+y*width].G*blurMatrix[Math.Abs(y-j)];
+                            b += colors[x+y*width].B*blurMatrix[Math.Abs(y-j)];
                         } else {
-                            r += colors2[x+j*bitmap.Width].R*blurMatrix[Math.Abs(y-j)];
-                            g += colors2[x+j*bitmap.Width].G*blurMatrix[Math.Abs(y-j)];
-                            b += colors2[x+j*bitmap.Width].B*blurMatrix[Math.Abs(y-j)];
+                            r += colors2[x+j*width].R*blurMatrix[Math.Abs(y-j)];
+                            g += colors2[x+j*width].G*blurMatrix[Math.Abs(y-j)];
+                            b += colors2[x+j*width].B*blurMatrix[Math.Abs(y-j)];
                         }
                     }
                     result.SetPixel(x, y, ColorConvertors.ClampRgbToColor((int) r, (int) g, (int) b));

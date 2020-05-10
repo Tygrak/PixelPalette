@@ -64,26 +64,40 @@ namespace PixelPalette {
         }
 
         private async void OnThresholdButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
+                mainWindow.Working = true;
                 statusText.Text = "Thresholding image";
                 Bitmap bitmap = await Task.Run(() => Ditherer.ClosestColor(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray())); 
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnRandomButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
+                mainWindow.Working = true;
                 statusText.Text = "Dithering image";
                 float bias = (float) randomBiasNumeric.Value;
                 Bitmap bitmap = await Task.Run(() => Ditherer.RandomDither(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray(), bias)); 
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnOrderedButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
+                mainWindow.Working = true;
                 statusText.Text = "Dithering image";
                 float[,] matrix = new float[4, 4];
                 for (int i = 0; i < orderedMatrixNumeric.Length; i++) {
@@ -93,11 +107,16 @@ namespace PixelPalette {
                 Bitmap bitmap = await Task.Run(() => Ditherer.OrderedDither(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray(), matrix)); 
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnFloSteinButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
+                mainWindow.Working = true;
                 statusText.Text = "Dithering image";
                 float[] errorMatrix = new float[4];
                 for (int i = 0; i < errorMatrix.Length; i++) {
@@ -106,11 +125,16 @@ namespace PixelPalette {
                 Bitmap bitmap = await Task.Run(() => Ditherer.FloydSteinbergDither(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray(), errorMatrix)); 
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnMinAvgErrButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null && mainWindow.ColorPalette.Count > 0) {
+                mainWindow.Working = true;
                 statusText.Text = "Dithering image";
                 float[] errorMatrix = new float[12];
                 for (int i = 0; i < errorMatrix.Length; i++) {
@@ -119,6 +143,7 @@ namespace PixelPalette {
                 Bitmap bitmap = await Task.Run(() => Ditherer.MinAvgErrDither(mainWindow.CurrentBitmap, mainWindow.ColorPalette.ToArray(), errorMatrix)); 
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 

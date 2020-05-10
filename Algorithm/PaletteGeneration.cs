@@ -94,12 +94,14 @@ namespace PixelPalette.Algorithm {
             {
                 resColors.AddRange(pixels);
             }
+            int width = bitmap.Width;
+            int height = bitmap.Height;
             Parallel.For(0, bitmap.Width, x => {
-                for (int y = 0; y < bitmap.Height; y++) {
-                    if (y > 0 && y%(bitmap.Height/count) == 0) {
+                for (int y = 0; y < height; y++) {
+                    if (y > 0 && y%(height/count) == 0) {
                         result.SetPixel(x, y, Color.Black);
                     } else {
-                        result.SetPixel(x, y, resColors[x+y*bitmap.Width]);
+                        result.SetPixel(x, y, resColors[x+y*width]);
                     }
                 }    
             });

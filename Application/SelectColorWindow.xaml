@@ -6,7 +6,8 @@
         x:Class="PixelPalette.SelectColorWindow"
         Title="Select Color - PixelPalette"
         Width="400"
-        Height="300">
+        Height="300"
+        Icon="/Assets/palette.png">
   <DockPanel Classes="DialogWindow">
         <DockPanel DockPanel.Dock="Bottom" LastChildFill="false" Classes="OkBar">
             <Button DockPanel.Dock="Right" Name="OkButton" Width="100" Click="OnOkButtonClick">

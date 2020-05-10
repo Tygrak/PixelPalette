@@ -11,9 +11,11 @@ namespace PixelPalette.Algorithm {
         public static Bitmap ClosestColor(Bitmap bitmap, Color[] colorPalette) {
             Color[] colors = BitmapConvert.ColorArrayFromBitmap(bitmap);
             DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
+            int width = bitmap.Width;
+            int height = bitmap.Height;
             Parallel.For(0, bitmap.Width, x => {
-                for (int y = 0; y < bitmap.Height; y++) {
-                    Color pixel = colors[x+y*bitmap.Width];
+                for (int y = 0; y < height; y++) {
+                    Color pixel = colors[x+y*width];
                     result.SetPixel(x, y, ColorHelpers.GetMinDistance(pixel, colorPalette));
                     //result.SetPixel(x, y, pixel);
                 }    
@@ -34,19 +36,21 @@ namespace PixelPalette.Algorithm {
                 throw new ArgumentException("Error diffusion matrix needs to have 4 values");
             }
             (int R, int G, int B)[] colors = BitmapConvert.IntArrayFromBitmap(bitmap);
+            int width = bitmap.Width;
+            int height = bitmap.Height;
             DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
-            Parallel.For(0, bitmap.Width, x => {
-                for (int y = 0; y < bitmap.Height; y++) {
-                    (int R, int G, int B) pixel = colors[x+y*bitmap.Width];
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    (int R, int G, int B) pixel = colors[x+y*width];
                     Color nearestColor = ColorHelpers.GetMinDistance(pixel, colorPalette);
                     (int R, int G, int B) error = (pixel.R-nearestColor.R, pixel.G-nearestColor.G, pixel.B-nearestColor.B);
-                    AddToPixelInArray(colors, x+1, y  , bitmap.Width, error, errorMatrix[0]);
-                    AddToPixelInArray(colors, x-1, y+1, bitmap.Width, error, errorMatrix[1]);
-                    AddToPixelInArray(colors, x  , y+1, bitmap.Width, error, errorMatrix[2]);
-                    AddToPixelInArray(colors, x+1, y+1, bitmap.Width, error, errorMatrix[3]);
+                    AddToPixelInArray(colors, x+1, y  , width, error, errorMatrix[0]);
+                    AddToPixelInArray(colors, x-1, y+1, width, error, errorMatrix[1]);
+                    AddToPixelInArray(colors, x  , y+1, width, error, errorMatrix[2]);
+                    AddToPixelInArray(colors, x+1, y+1, width, error, errorMatrix[3]);
                     result.SetPixel(x, y, nearestColor);
-                }    
-            });
+                }
+            }
             return result.Bitmap;
         }
 
@@ -55,27 +59,29 @@ namespace PixelPalette.Algorithm {
                 throw new ArgumentException("Error diffusion matrix needs to have 12 values");
             }
             (int R, int G, int B)[] colors = BitmapConvert.IntArrayFromBitmap(bitmap);
+            int width = bitmap.Width;
+            int height = bitmap.Height;
             DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
-            Parallel.For(0, bitmap.Width, x => {
-                for (int y = 0; y < bitmap.Height; y++) {
-                    (int R, int G, int B) pixel = colors[x+y*bitmap.Width];
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    (int R, int G, int B) pixel = colors[x+y*width];
                     Color nearestColor = ColorHelpers.GetMinDistance(pixel, colorPalette);
                     (int R, int G, int B) error = (pixel.R-nearestColor.R, pixel.G-nearestColor.G, pixel.B-nearestColor.B);
-                    AddToPixelInArray(colors, x+1, y  , bitmap.Width, error, errorMatrix[0]);
-                    AddToPixelInArray(colors, x+2, y  , bitmap.Width, error, errorMatrix[1]);
-                    AddToPixelInArray(colors, x-2, y+1, bitmap.Width, error, errorMatrix[2]);
-                    AddToPixelInArray(colors, x-1, y+1, bitmap.Width, error, errorMatrix[3]);
-                    AddToPixelInArray(colors, x  , y+1, bitmap.Width, error, errorMatrix[4]);
-                    AddToPixelInArray(colors, x+1, y+1, bitmap.Width, error, errorMatrix[5]);
-                    AddToPixelInArray(colors, x+2, y+1, bitmap.Width, error, errorMatrix[6]);
-                    AddToPixelInArray(colors, x-2, y+2, bitmap.Width, error, errorMatrix[7]);
-                    AddToPixelInArray(colors, x-1, y+2, bitmap.Width, error, errorMatrix[8]);
-                    AddToPixelInArray(colors, x  , y+2, bitmap.Width, error, errorMatrix[9]);
-                    AddToPixelInArray(colors, x+1, y+2, bitmap.Width, error, errorMatrix[10]);
-                    AddToPixelInArray(colors, x+2, y+2, bitmap.Width, error, errorMatrix[11]);
+                    AddToPixelInArray(colors, x+1, y  , width, error, errorMatrix[0]);
+                    AddToPixelInArray(colors, x+2, y  , width, error, errorMatrix[1]);
+                    AddToPixelInArray(colors, x-2, y+1, width, error, errorMatrix[2]);
+                    AddToPixelInArray(colors, x-1, y+1, width, error, errorMatrix[3]);
+                    AddToPixelInArray(colors, x  , y+1, width, error, errorMatrix[4]);
+                    AddToPixelInArray(colors, x+1, y+1, width, error, errorMatrix[5]);
+                    AddToPixelInArray(colors, x+2, y+1, width, error, errorMatrix[6]);
+                    AddToPixelInArray(colors, x-2, y+2, width, error, errorMatrix[7]);
+                    AddToPixelInArray(colors, x-1, y+2, width, error, errorMatrix[8]);
+                    AddToPixelInArray(colors, x  , y+2, width, error, errorMatrix[9]);
+                    AddToPixelInArray(colors, x+1, y+2, width, error, errorMatrix[10]);
+                    AddToPixelInArray(colors, x+2, y+2, width, error, errorMatrix[11]);
                     result.SetPixel(x, y, nearestColor);
                 }    
-            });
+            }
             return result.Bitmap;
         }
 
@@ -83,9 +89,11 @@ namespace PixelPalette.Algorithm {
         public static Bitmap OrderedDither(Bitmap bitmap, Color[] colorPalette, float[,] matrix) {
             (int R, int G, int B)[] colors = BitmapConvert.IntArrayFromBitmap(bitmap);
             DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
+            int width = bitmap.Width;
+            int height = bitmap.Height;
             Parallel.For(0, bitmap.Width, x => {
-                for (int y = 0; y < bitmap.Height; y++) {
-                    (int R, int G, int B) pixel = colors[x+y*bitmap.Width];
+                for (int y = 0; y < height; y++) {
+                    (int R, int G, int B) pixel = colors[x+y*width];
                     float m = matrix[x%matrix.GetLength(0), y%matrix.GetLength(1)];
                     pixel.R = (int) (pixel.R+255/4f*(m-1/2f));
                     pixel.G = (int) (pixel.G+255/4f*(m-1/2f));
@@ -99,10 +107,12 @@ namespace PixelPalette.Algorithm {
         public static Bitmap RandomDither(Bitmap bitmap, Color[] colorPalette, float bias = 10) {
             Color[] colors = BitmapConvert.ColorArrayFromBitmap(bitmap);
             DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
+            int width = bitmap.Width;
+            int height = bitmap.Height;
             Parallel.For(0, bitmap.Width, x => {
                 Random random = new Random();
-                for (int y = 0; y < bitmap.Height; y++) {
-                    Color pixel = colors[x+y*bitmap.Width];
+                for (int y = 0; y < height; y++) {
+                    Color pixel = colors[x+y*width];
                     int highestDistance = 0;
                     int lowestDistance = int.MaxValue;
                     float distanceSum = 0;
@@ -132,45 +142,6 @@ namespace PixelPalette.Algorithm {
                     }
                 }    
             });
-            return result.Bitmap;
-        }
-
-        public static Bitmap DirectBinarySearch(Bitmap bitmap, Color[] colorPalette, float bias = 10) {
-            Color[] colors = BitmapConvert.ColorArrayFromBitmap(bitmap);
-            Random random = new Random();
-            DirectBitmap result = new DirectBitmap(bitmap.Width, bitmap.Height);
-            for (int x = 0; x < bitmap.Width; x++) {
-                for (int y = 0; y < bitmap.Height; y++) {
-                    Color pixel = colors[x+y*bitmap.Width];
-                    int highestDistance = 0;
-                    int lowestDistance = int.MaxValue;
-                    float distanceSum = 0;
-                    float[] distances = new float[colorPalette.Length];
-                    for (int i = 0; i < colorPalette.Length; i++) {
-                        int distance = (int) ColorHelpers.GetDistance(colorPalette[i], pixel);
-                        distances[i] = distance;
-                        if (highestDistance < distance) {
-                            highestDistance = distance;
-                        }
-                        if (lowestDistance > distance) {
-                            lowestDistance = distance;
-                        }
-                    }
-                    for (int i = 0; i < colorPalette.Length; i++) {
-                        distances[i] = MathF.Pow(lowestDistance+highestDistance-distances[i], bias);
-                        distanceSum += distances[i];
-                    }
-                    float choosen = (float) (random.NextDouble()*distanceSum);
-                    float currentRange = 0;
-                    for (int i = 0; i < distances.Length; i++) {
-                        currentRange += distances[i];
-                        if (currentRange > choosen) {
-                            result.SetPixel(x, y, colorPalette[i]);
-                            break;
-                        }
-                    }
-                }    
-            }
             return result.Bitmap;
         }
     }

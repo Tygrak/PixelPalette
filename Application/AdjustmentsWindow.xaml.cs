@@ -50,73 +50,108 @@ namespace PixelPalette {
         }
 
         private async void OnResizeButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null) {
+                mainWindow.Working = true;
                 statusText.Text = "Resizing image";
                 int width = (int) resizeWidthNumeric.Value;
                 int height = (int) resizeHeightNumeric.Value;
                 Bitmap bitmap = await Task.Run(() => new Bitmap(mainWindow.CurrentBitmap, width, height));
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnRotateRightButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null) {
+                mainWindow.Working = true;
                 statusText.Text = "Rotating image";
                 Bitmap bitmap = new Bitmap(mainWindow.CurrentBitmap); 
                 await Task.Run(() => bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone));
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnRotateLeftButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null) {
+                mainWindow.Working = true;
                 statusText.Text = "Rotating image";
                 Bitmap bitmap = new Bitmap(mainWindow.CurrentBitmap); 
                 await Task.Run(() => bitmap.RotateFlip(RotateFlipType.Rotate270FlipNone));
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnFlipXButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null) {
+                mainWindow.Working = true;
                 statusText.Text = "Flipping image";
                 Bitmap bitmap = new Bitmap(mainWindow.CurrentBitmap); 
                 await Task.Run(() => bitmap.RotateFlip(RotateFlipType.RotateNoneFlipX));
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnFlipYButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null) {
+                mainWindow.Working = true;
                 statusText.Text = "Flipping image";
                 Bitmap bitmap = new Bitmap(mainWindow.CurrentBitmap); 
                 await Task.Run(() => bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY));
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnShiftHslButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null) {
+                mainWindow.Working = true;
                 statusText.Text = "Adjusting image";
                 float hue = (float) hueNumeric.Value;
                 float saturation = (float) (saturationNumeric.Value/100);
                 float lightness = (float) (lightnessNumeric.Value/100);
                 mainWindow.ChangeMainImage(await Task.Run(() => ColorAdjustments.ShiftHsl(mainWindow.CurrentBitmap, hue, saturation, lightness)));
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnBlurButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null) {
+                mainWindow.Working = true;
                 statusText.Text = "Bluring image";
                 float sigma = (float) blurSigmaNumeric.Value;
                 mainWindow.ChangeMainImage(await Task.Run(() => ColorAdjustments.BlurImage(mainWindow.CurrentBitmap, sigma)));
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 

@@ -137,17 +137,23 @@ namespace PixelPalette {
         }
 
         private async void OnSortButtonClick(object sender, RoutedEventArgs eventArgs) {
+            if (mainWindow.Working) {
+                return;
+            }
             if (mainWindow.CurrentBitmap != null) {
+                mainWindow.Working = true;
                 statusText.Text = "Sorting image";
                 int amount = (int) medianCutAmountNumeric.Value;
                 Bitmap bitmap = await Task.Run(() => PaletteGeneration.SortColors(mainWindow.CurrentBitmap, amount)); 
                 mainWindow.ChangeMainImage(bitmap);
                 statusText.Text = "";
+                mainWindow.Working = false;
             }
         }
 
         private async void OnDuoTonePickColorButtonClick(object sender, RoutedEventArgs eventArgs) {
-            SelectColorWindow dialog = new SelectColorWindow();
+            Color currentColor = ColorConvertors.HslToColor(((float) duoToneHueNumeric.Value, (float) duoToneSaturationNumeric.Value, 0.5f));
+            SelectColorWindow dialog = new SelectColorWindow(currentColor);
             Color result = await dialog.ShowDialog<Color>(this);
             var hslColor = ColorConvertors.ColorToHsl(result);
             duoToneHueNumeric.Value = hslColor.H;
@@ -160,6 +166,17 @@ namespace PixelPalette {
             float hue = (float) (duoToneHueNumeric.Value%360);
             float saturation = (float) duoToneSaturationNumeric.Value;
             ColorPalette = await Task.Run(() => PaletteGeneration.FakeDuoTone(amount, hue, saturation));
+            ReloadPaletteItems();
+            statusText.Text = "";
+        }
+
+        private async void OnDuoToneAddButtonClick(object sender, RoutedEventArgs eventArgs) {
+            statusText.Text = "Generating Palette";
+            int amount = (int) duoToneAmountNumeric.Value;
+            float hue = (float) (duoToneHueNumeric.Value%360);
+            float saturation = (float) duoToneSaturationNumeric.Value;
+            ColorPalette.AddRange(await Task.Run(() => PaletteGeneration.FakeDuoTone(amount, hue, saturation)));
+            ColorPalette = ColorPalette.Distinct().ToList();
             ReloadPaletteItems();
             statusText.Text = "";
         }
