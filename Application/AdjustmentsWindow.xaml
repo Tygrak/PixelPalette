@@ -31,6 +31,10 @@
                         <NumericUpDown DockPanel.Dock="Right" Name="ResizeHeight" Width="200" Value="512" Minimum="1" />
                     </DockPanel>
                     <DockPanel LastChildFill="false" Margin="10">
+                        <CheckBox DockPanel.Dock="Right" Name="LockRatioCheckBox" IsChecked="True" />
+                        <TextBlock DockPanel.Dock="Right" Text="Lock Ratio:" Margin="5 0 5 0" VerticalAlignment="Center"/>
+                    </DockPanel>
+                    <DockPanel LastChildFill="false" Margin="10">
                         <Button Name="ResizeButton" DockPanel.Dock="Right" Click="OnResizeButtonClick">
                             Resize
                         </Button>

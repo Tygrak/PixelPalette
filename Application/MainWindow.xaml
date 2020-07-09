@@ -45,7 +45,7 @@
                 </DockPanel>
             </DockPanel>
         </Border>
-        <Border DockPanel.Dock="Left" Width="100" BorderBrush="Black" BorderThickness="2" Background="#323433">
+        <Border DockPanel.Dock="Left" Width="100" BorderBrush="Black" BorderThickness="0 0 2 0" Background="#323433">
             <DockPanel>
                 <Button Name="RestoreButton" DockPanel.Dock="Top" Height="50" Click="OnRestoreButtonClick">
                     Restore

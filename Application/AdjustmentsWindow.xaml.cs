@@ -18,8 +18,10 @@ namespace PixelPalette {
         private TextBlock compareErrorText;
         private TextBlock compareBrightnessErrorText;
 
-        private NumericUpDown resizeWidthNumeric;
-        private NumericUpDown resizeHeightNumeric;
+        public CheckBox lockRatioCheckBox;
+        private double currentResizeDimensionsRatio;
+        public NumericUpDown resizeWidthNumeric;
+        public NumericUpDown resizeHeightNumeric;
         private NumericUpDown hueNumeric;
         private NumericUpDown saturationNumeric;
         private NumericUpDown lightnessNumeric;
@@ -37,7 +39,12 @@ namespace PixelPalette {
             compareErrorText = this.FindControl<TextBlock>("CompareErrorResult");
             compareBrightnessErrorText = this.FindControl<TextBlock>("CompareBrightnessResult");
             resizeWidthNumeric = this.FindControl<NumericUpDown>("ResizeWidth");
+            resizeWidthNumeric.ValueChanged += (o, e) => OnChangeResizeWidth(e);
             resizeHeightNumeric = this.FindControl<NumericUpDown>("ResizeHeight");
+            resizeHeightNumeric.ValueChanged += (o, e) => OnChangeResizeHeight(e);
+            OnUpdateResizeRatio();
+            lockRatioCheckBox = this.FindControl<CheckBox>("LockRatioCheckBox");
+            lockRatioCheckBox.Click += (o, e) => OnUpdateResizeRatio();
             hueNumeric = this.FindControl<NumericUpDown>("Hue");
             saturationNumeric = this.FindControl<NumericUpDown>("Saturation");
             lightnessNumeric = this.FindControl<NumericUpDown>("Lightness");
@@ -47,6 +54,22 @@ namespace PixelPalette {
                 Showing = false;
                 e.Cancel = true;
             };
+        }
+
+        public void OnUpdateResizeRatio() {
+            currentResizeDimensionsRatio = resizeWidthNumeric.Value/resizeHeightNumeric.Value;
+        }
+
+        private void OnChangeResizeWidth(NumericUpDownValueChangedEventArgs e) {
+            if (lockRatioCheckBox.IsChecked.Value) {
+                resizeHeightNumeric.Value = Math.Round(e.NewValue/currentResizeDimensionsRatio);
+            }
+        }
+
+        private void OnChangeResizeHeight(NumericUpDownValueChangedEventArgs e) {
+            if (lockRatioCheckBox.IsChecked.Value) {
+                resizeWidthNumeric.Value = Math.Round(e.NewValue*currentResizeDimensionsRatio);
+            }
         }
 
         private async void OnResizeButtonClick(object sender, RoutedEventArgs eventArgs) {

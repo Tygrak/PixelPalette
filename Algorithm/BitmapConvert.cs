@@ -14,7 +14,6 @@ namespace PixelPalette.Algorithm {
             using (MemoryStream memoryStream = new MemoryStream()) {
                 bitmap.Save(memoryStream, ImageFormat.Jpeg);
                 memoryStream.Seek(0, SeekOrigin.Begin);
-                var a = memoryStream.Length;
                 return new AvaloniaBitmap(new StreamReader(memoryStream).BaseStream);
             }
         }

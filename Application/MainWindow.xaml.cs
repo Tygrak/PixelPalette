@@ -132,6 +132,13 @@ namespace PixelPalette {
             mainImage.Source = BitmapConvert.ConvertToAvaloniaBitmap(CurrentBitmap);
             UpdateMainImageStretch();
             imageSizeText.Text = $"{CurrentBitmap.Size.Width}x{CurrentBitmap.Size.Height}";
+            if (adjustmentsWindow.lockRatioCheckBox.IsChecked.Value) {
+                adjustmentsWindow.lockRatioCheckBox.IsChecked = false;
+                adjustmentsWindow.resizeWidthNumeric.Value = CurrentBitmap.Size.Width;
+                adjustmentsWindow.resizeHeightNumeric.Value = CurrentBitmap.Size.Height;
+                adjustmentsWindow.lockRatioCheckBox.IsChecked = true;
+                adjustmentsWindow.OnUpdateResizeRatio();
+            }
         }
 
         private void UpdateMainImageStretch() {
