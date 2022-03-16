@@ -64,7 +64,7 @@
             </DockPanel>
         </Border>
         <Border Background="#626a68" Name="ImageBorder">
-            <Image Name="MainImage" Source="/Assets/blank.png">
+            <Image Name="MainImage" Source="/Assets/blank.png" PointerPressed="OnMainImagePointerPressed">
             </Image>
         </Border>
     </DockPanel>

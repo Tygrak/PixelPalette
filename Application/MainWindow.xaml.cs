@@ -178,6 +178,25 @@ namespace PixelPalette {
             }
         }
 
+        //todo: add a way to disable this behaviour (should be disabled by default) and also add a way to directly add colors to palette using this
+        private async void OnMainImagePointerPressed(object sender, PointerPressedEventArgs eventArgs) {
+            if (CurrentBitmap == null) {
+                return;
+            }
+            Avalonia.Point point = eventArgs.GetCurrentPoint(mainImage).Position;
+            double x = point.X;
+            double y = point.Y;
+            if (mainImage.Stretch == Avalonia.Media.Stretch.Uniform) {
+                x = (x/mainImage.Bounds.Width)*CurrentBitmap.Width;
+                y = (y/mainImage.Bounds.Height)*CurrentBitmap.Height;
+                x = Math.Clamp(x, 0, CurrentBitmap.Width-1);
+                y = Math.Clamp(y, 0, CurrentBitmap.Height-1);
+            }
+            Color color = CurrentBitmap.GetPixel((int) x, (int) y);
+            //statusText.Text = point.ToString() + $": {x}, {y} " + ": " + color.ToString();
+            await Application.Current.Clipboard.SetTextAsync(ColorConvertors.ColorToHex(color));
+        }
+
         private void OnUndoButtonClick(object sender, RoutedEventArgs eventArgs) {
             if (Working) {
                 return;

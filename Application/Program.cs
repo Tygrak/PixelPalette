@@ -2,15 +2,14 @@
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Logging.Serilog;
+using Avalonia.Logging;
 
-namespace PixelPalette
-{
-    class Program
-    {
+namespace PixelPalette {
+    class Program {
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.
+        [STAThread]
         public static void Main(string[] args) => BuildAvaloniaApp()
             .StartWithClassicDesktopLifetime(args);
 
@@ -18,6 +17,6 @@ namespace PixelPalette
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
                 .UsePlatformDetect()
-                .LogToDebug();
+                .LogToTrace(LogEventLevel.Debug, LogArea.Property, LogArea.Layout);
     }
 }
